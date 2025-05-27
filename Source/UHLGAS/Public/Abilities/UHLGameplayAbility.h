@@ -86,7 +86,10 @@ public:
 	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UHL GameplayAbility")
 	bool bCancelManually = false;
-	
+
+	UFUNCTION(BlueprintCallable, Category="UHL GameplayAbility")
+	bool GetIsCancelRequested() const { return bCancelRequested; };
+
     UFUNCTION(BlueprintCallable, Category="UHL GameplayAbility")
     UUHLAbilitySystemComponent* GetUHLAbilitySystemComponentFromActorInfo() const;
 
