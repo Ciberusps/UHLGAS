@@ -73,13 +73,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AbilityInputCache")
 	bool bIgnoreActivatedState = false;
 
-    // if any of those tags on owner ASC - cache input
-    // UPD not required we cache only abilities that can't be activated and have bCachedInput
-    // so when CheckCache will be called we will try to activate them all, but latest - first
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AbilityInputCache")
-    FGameplayTagContainer AddingToCacheInputRequiredTags;
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AbilityInputCache")
-    FGameplayTagContainer AddingToCacheInputBlockedTags;
+    // tags required on owner ASC to be cache ability
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AbilityInputCache", DisplayName="[Add to Cache] RequiredTags")
+    FGameplayTagContainer AddToCacheRequiredTags;
+	// tags blocked on owner ASC - if present ability won't be cached
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AbilityInputCache", DisplayName="[Add to Cache] BlockedTags")
+    FGameplayTagContainer AddToCacheBlockedTags;
 
 	/**
 	* When true, external CancelAbility calls are intercepted and must be completed manually via ReleaseCancellation().

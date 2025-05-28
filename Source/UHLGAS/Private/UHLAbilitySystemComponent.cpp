@@ -278,8 +278,8 @@ int32 UUHLAbilitySystemComponent::FireGameplayEvent(FGameplayTag EventTag, const
 
 bool UUHLAbilitySystemComponent::CanAddAbilityToCache(UUHLGameplayAbility* GameplayAbility_In) const
 {
-    bool bHasRequiredTags = HasAllMatchingGameplayTags(GameplayAbility_In->AddingToCacheInputRequiredTags);
-    bool bDontHaveBlockedTags = !HasAnyMatchingGameplayTags(GameplayAbility_In->AddingToCacheInputBlockedTags);
+    bool bHasRequiredTags = HasAllMatchingGameplayTags(GameplayAbility_In->AddToCacheRequiredTags);
+    bool bDontHaveBlockedTags = !HasAnyMatchingGameplayTags(GameplayAbility_In->AddToCacheBlockedTags);
 
     return bHasRequiredTags && bDontHaveBlockedTags;
 }
