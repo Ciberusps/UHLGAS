@@ -11,6 +11,47 @@
 #include "Curves/CurveFloat.h"
 #include "ANS_ChangeCapsuleBase.generated.h"
 
+USTRUCT(BlueprintType)
+struct FChangeCapsuleCollisionSettings
+{
+    GENERATED_BODY()
+
+    /** Override Collision Enabled */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Change Capsule", meta=(InlineEditConditionToggle))
+    bool bOverrideCollisionEnabled = false;
+    /** Collision enabled state (None / QueryOnly / QueryAndPhysics) */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Change Capsule", meta=(EditCondition="bOverrideCollisionEnabled"))
+    TEnumAsByte<ECollisionEnabled::Type> CollisionEnabled = ECollisionEnabled::QueryAndPhysics;
+
+    /** Override Collision Profile Name */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Change Capsule", meta=(InlineEditConditionToggle))
+    bool bOverrideCollisionProfileName = false;
+    /** Collision profile name from your Project Settings → Collision */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Change Capsule", meta=(EditCondition="bOverrideCollisionProfileName"))
+    FName CollisionProfileName = TEXT("Pawn");
+
+    /** Override Generate Overlap Events */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Change Capsule", meta=(InlineEditConditionToggle))
+    bool bOverrideGenerateOverlapEvents = false;
+    /** Generate overlap events? */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Change Capsule", meta=(EditCondition="bOverrideGenerateOverlapEvents"))
+    bool bGenerateOverlapEvents = true;
+
+    /** Override Force Query Only */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Change Capsule", meta=(InlineEditConditionToggle))
+    bool bOverrideForceQueryOnly = false;
+    /** If true, forces query‑only even if CollisionEnabled is set to Physics */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Change Capsule", meta=(EditCondition="bOverrideForceQueryOnly"))
+    bool bForceQueryOnly = false;
+
+    /** Override Custom Responses */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Change Capsule", meta=(InlineEditConditionToggle))
+    bool bOverrideCustomResponses = false;
+    /** Per‑channel responses (Block / Overlap / Ignore) */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Change Capsule", meta=(EditCondition="bOverrideCustomResponses"))
+    TMap<TEnumAsByte<ECollisionChannel>, TEnumAsByte<ECollisionResponse>> CustomResponses;
+};
+
 /**
  * Base ANS that handles “modify capsule properties + blend in/out via FAlphaBlend
  * + optional custom EaseCurve + debug visualization.”
@@ -83,6 +124,10 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Change Capsule")
     EAlphaBlendOption BlendOptionOut = EAlphaBlendOption::Linear;
 
+	/** Collision settings with independent toggles */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Change Capsule")
+	FChangeCapsuleCollisionSettings CapsuleCollisionSettings;
+	
     /**
      * Optional custom Ease Curve:  
      * If you assign a valid FRuntimeFloatCurve here, the raw alpha (from FAlphaBlend)  
@@ -156,4 +201,14 @@ private:
 
     /** Whether we successfully grabbed “originals” in NotifyBegin. */
     bool bHasValidOriginals = false;
+
+	/** Snapshot of original capsule settings for revert */
+	FChangeCapsuleCollisionSettings OriginalCapsuleSettings;
+
+	// Save original collision settings
+	void SaveOriginalCollisionSettings();
+	// Restore capsule to original state
+	void RestoreOriginalCollisionSettings();
+	// Applies settings: restores original then applies overrides
+	void ApplyCollisionSettings();
 };

@@ -42,11 +42,9 @@ void UANS_SpawnAndSwitchPlayerCamera::NotifyBegin(USkeletalMeshComponent* MeshCo
     if (AttachSocketName != NAME_None)
     {
         // If we want to attach to a socket/bone, get its world transform
-        FName Socket     = AttachSocketName;
-        USceneComponent* MeshRoot = MeshComp->GetAttachmentRootActor() ? MeshComp : nullptr;
-        if (MeshComp->DoesSocketExist(Socket))
+        if (MeshComp->DoesSocketExist(AttachSocketName))
         {
-            SpawnTransform = MeshComp->GetSocketTransform(Socket);
+            SpawnTransform = MeshComp->GetSocketTransform(AttachSocketName);
         }
     }
 
@@ -78,7 +76,7 @@ void UANS_SpawnAndSwitchPlayerCamera::NotifyBegin(USkeletalMeshComponent* MeshCo
     }
 
     // 4. Blend to the spawned camera
-    PC->SetViewTargetWithBlend(SpawnedCameraInstance, BlendInTime, BlendInFunction);
+	PC->SetViewTargetWithBlend(SpawnedCameraInstance, BlendInTime, BlendInFunction);
 }
 
 void UANS_SpawnAndSwitchPlayerCamera::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference)

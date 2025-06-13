@@ -87,6 +87,9 @@ void UANS_ChangeCapsuleBase::NotifyBegin(
         }
     }
     // Otherwise, leave them at “original” until NotifyTick interpolates
+
+	SaveOriginalCollisionSettings();
+	ApplyCollisionSettings();
 }
 
 void UANS_ChangeCapsuleBase::NotifyTick(
@@ -238,4 +241,85 @@ void UANS_ChangeCapsuleBase::NotifyEnd(
     bHasValidOriginals = false;
     ElapsedTime = 0.0f;
     NotifyTotalDuration = 0.0f;
+
+	RestoreOriginalCollisionSettings();
+}
+
+void UANS_ChangeCapsuleBase::SaveOriginalCollisionSettings()
+{
+	if (!CapsuleComp) return;
+
+	// Collision Enabled
+	OriginalCapsuleSettings.CollisionEnabled = CapsuleComp->GetCollisionEnabled();
+	OriginalCapsuleSettings.bForceQueryOnly = false;
+	OriginalCapsuleSettings.bOverrideCollisionEnabled = true;
+
+	// Profile Name
+	OriginalCapsuleSettings.CollisionProfileName = CapsuleComp->GetCollisionProfileName();
+	OriginalCapsuleSettings.bOverrideCollisionProfileName = true;
+
+	// Overlap Events
+	OriginalCapsuleSettings.bGenerateOverlapEvents = CapsuleComp->GetGenerateOverlapEvents();
+	OriginalCapsuleSettings.bOverrideGenerateOverlapEvents = true;
+
+	// Custom Responses
+	OriginalCapsuleSettings.CustomResponses.Empty();
+	for (int32 Chan = 0; Chan < ECollisionChannel::ECC_MAX; ++Chan)
+	{
+		OriginalCapsuleSettings.CustomResponses.Add(
+			static_cast<ECollisionChannel>(Chan),
+			CapsuleComp->GetCollisionResponseToChannel((ECollisionChannel)Chan)
+		);
+	}
+	OriginalCapsuleSettings.bOverrideCustomResponses = true;
+}
+
+void UANS_ChangeCapsuleBase::RestoreOriginalCollisionSettings()
+{
+	if (!CapsuleComp) return;
+
+	// Restore enabled & profile
+	CapsuleComp->SetCollisionEnabled(OriginalCapsuleSettings.CollisionEnabled);
+	CapsuleComp->SetCollisionProfileName(OriginalCapsuleSettings.CollisionProfileName);
+
+	// Restore overlap
+	CapsuleComp->SetGenerateOverlapEvents(OriginalCapsuleSettings.bGenerateOverlapEvents);
+
+	// Restore responses
+	for (auto& Pair : OriginalCapsuleSettings.CustomResponses)
+	{
+		CapsuleComp->SetCollisionResponseToChannel(Pair.Key, Pair.Value);
+	}
+}
+
+void UANS_ChangeCapsuleBase::ApplyCollisionSettings()
+{
+	if (!CapsuleComp) return;
+
+	// Apply overrides
+	if (CapsuleCollisionSettings.bOverrideCollisionEnabled)
+	{
+		// Use if-else instead of ternary to prevent ambiguity
+		ECollisionEnabled::Type NewMode = CapsuleCollisionSettings.CollisionEnabled;
+		if (CapsuleCollisionSettings.bForceQueryOnly)
+		{
+			NewMode = ECollisionEnabled::QueryOnly;
+		}
+		CapsuleComp->SetCollisionEnabled(NewMode);
+	}
+	if (CapsuleCollisionSettings.bOverrideCollisionProfileName)
+	{
+		CapsuleComp->SetCollisionProfileName(CapsuleCollisionSettings.CollisionProfileName);
+	}
+	if (CapsuleCollisionSettings.bOverrideGenerateOverlapEvents)
+	{
+		CapsuleComp->SetGenerateOverlapEvents(CapsuleCollisionSettings.bGenerateOverlapEvents);
+	}
+	if (CapsuleCollisionSettings.bOverrideCustomResponses)
+	{
+		for (auto& Pair : CapsuleCollisionSettings.CustomResponses)
+		{
+			CapsuleComp->SetCollisionResponseToChannel(Pair.Key, Pair.Value);
+		}
+	}
 }
