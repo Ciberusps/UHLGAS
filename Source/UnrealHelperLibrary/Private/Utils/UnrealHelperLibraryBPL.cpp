@@ -621,6 +621,34 @@ void UUnrealHelperLibraryBPL::GetPointAtDirectionRelativeToOtherActor(FVector& P
 	}
 }
 
+void UUnrealHelperLibraryBPL::GetPointAtDirectionRelativeToOtherVector(FVector& Point, FRotator& PointRotation, const FVector& Vector1, const FVector& Vector2, const EUHLDirection Direction,
+	const float Distance, const bool bTakeZFromVector1, const bool bDebug, const float DebugLifetime, const FLinearColor DebugColor)
+{
+	float Angle = DirectionToAngle(Direction);
+	const FVector DirectionBetweenVectors = (Vector2 - Vector1).GetSafeNormal();
+	Point = Vector1 + (DirectionBetweenVectors.RotateAngleAxis(Angle, FVector(0, 0, 1)) * Distance);
+	Point.Z = bTakeZFromVector1 ? Vector1.Z : Vector2.Z;
+	PointRotation = (Point - Vector1).ToOrientationRotator();
+
+	if (bDebug)
+	{
+		UWorld* DebugWorld = GEngine->GetWorld();
+		if (!DebugWorld) return;
+
+		const UEnum* EnumPtr = FindObject<UEnum>(nullptr, TEXT("EUHLDirection"), true);
+		if (EnumPtr)
+		{
+			DrawDebugString(DebugWorld, Point, FString::Printf(TEXT("Direction %s\nDistance %.2f"), *EnumPtr->GetNameStringByValue((uint8)Direction), Distance), 0, DebugColor.ToFColor(true),
+				DebugLifetime, true, 1.0f);
+		}
+		DrawDebugSphere(DebugWorld, Point, 10.0f, 12, DebugColor.ToFColor(true), true, DebugLifetime, DEPTH_PRIORITY, 1);
+		FVector ArrowLineEnd = Vector1 + (DirectionBetweenVectors.RotateAngleAxis(Angle, FVector(0, 0, 1)) * (Distance - 10));
+		Point.Z = bTakeZFromVector1 ? Vector1.Z : Vector2.Z;
+		DrawDebugDirectionalArrow(DebugWorld, Vector1, Vector2, RELATIVE_POINT_ARROW_SIZE, FColor::White, true, DebugLifetime, DEPTH_PRIORITY, 1);
+		DrawDebugDirectionalArrow(DebugWorld, Vector1, ArrowLineEnd, RELATIVE_POINT_ARROW_SIZE, FColor::White, true, DebugLifetime, DEPTH_PRIORITY, 2);
+	}
+}
+
 float UUnrealHelperLibraryBPL::DirectionToAngle(const EUHLDirection DirectionIn)
 {
 	if (DirectionIn == EUHLDirection::Front)
@@ -691,7 +719,7 @@ EUHLDirection UUnrealHelperLibraryBPL::GetMovementDirection(
 	// 3) Compute world-space yaw of movement
 	const float MovementYaw = FlatVel.Rotation().Yaw;
 
-	// 4) Your actor’s facing yaw
+	// 4) Your actor's facing yaw
 	const float ForwardYaw = ActorRotation.Yaw;
 
 	// 5) Signed difference in [-180, +180]

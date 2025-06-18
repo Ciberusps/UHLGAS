@@ -194,6 +194,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = "UnrealHelperLibrary|Utils", meta = (DefaultToSelf = "Actor1", AdvancedDisplay = "bTakeZFromActor1,bDebug,DebugLifetime,DebugColor"))
 	static void GetPointAtDirectionRelativeToOtherActor(FVector& Point, FRotator& PointRotation, const AActor* Actor1, const AActor* Actor2, const EUHLDirection Direction, const float Distance,
 		const bool bTakeZFromActor1 = true, const bool bDebug = false, const float DebugLifetime = -1, const FLinearColor DebugColor = FLinearColor::White);
+	UFUNCTION(BlueprintPure, Category = "UnrealHelperLibrary|Utils", meta = (AdvancedDisplay = "bTakeZFromVector1,bDebug,DebugLifetime,DebugColor"))
+	static void GetPointAtDirectionRelativeToOtherVector(FVector& Point, FRotator& PointRotation, const FVector& Vector1, const FVector& Vector2, const EUHLDirection Direction, const float Distance,
+		const bool bTakeZFromVector1 = true, const bool bDebug = false, const float DebugLifetime = -1, const FLinearColor DebugColor = FLinearColor::White);
 	UFUNCTION(BlueprintPure, Category = "UnrealHelperLibrary|Utils")
 	static float DirectionToAngle(const EUHLDirection DirectionIn);
 
