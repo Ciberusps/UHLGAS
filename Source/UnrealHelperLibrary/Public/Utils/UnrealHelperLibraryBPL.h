@@ -182,6 +182,10 @@ public:
 	static FVector GetCenterPointBetweenVectors(const UObject* WorldContextObject, const FVector& PointA, const FVector& PointB,
 		const bool bDebug = false, const float DebugLifetime = -1, const FLinearColor DebugColor = FLinearColor::White);
 	
+	UFUNCTION(BlueprintPure, Category = "UnrealHelperLibrary|Utils", meta = (WorldContext = "WorldContextObject", AdvancedDisplay = "OverrideZ,bDebug,DebugLifetime,DebugColor"))
+	static void GetPointAtRelativeAngleUsingVector(FVector& Point, FRotator& PointRotation, const UObject* WorldContextObject, const FVector& Location, const FVector& ForwardVector, const float Angle, const float Distance, const float OverrideZ = -999999.f, const bool bDebug = false,
+		const float DebugLifetime = -1, const FLinearColor DebugColor = FLinearColor::White);
+
 	UFUNCTION(BlueprintPure, Category = "UnrealHelperLibrary|Utils", meta = (DefaultToSelf = "ActorIn", AdvancedDisplay = "bDebug,DebugLifetime,DebugColor"))
 	static void GetPointAtRelativeAngle(FVector& Point, FRotator& PointRotation, const AActor* ActorIn, const float Angle, const float Distance, const bool bDebug = false,
 		const float DebugLifetime = -1, const FLinearColor DebugColor = FLinearColor::White);
