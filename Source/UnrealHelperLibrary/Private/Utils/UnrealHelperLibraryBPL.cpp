@@ -533,14 +533,15 @@ void UUnrealHelperLibraryBPL::GetPointAtRelativeAngleUsingVector(
 		return;
 	}
 
-	FVector NormalizedForward = ForwardVector.GetSafeNormal();
-	FVector Result = Location + NormalizedForward.RotateAngleAxis(Angle, FVector(0, 0, 1)) * Distance;
-	
+	FVector LocationLocal = Location;
 	// Override Z if specified (using -999999.f as sentinel value to indicate no override)
 	if (OverrideZ > -999999.f)
 	{
-		Result.Z = OverrideZ;
+		LocationLocal.Z = OverrideZ;
 	}
+
+	FVector NormalizedForward = ForwardVector.GetSafeNormal();
+	FVector Result = LocationLocal + NormalizedForward.RotateAngleAxis(Angle, FVector(0, 0, 1)) * Distance;
 
 	if (bDebug)
 	{
@@ -552,16 +553,16 @@ void UUnrealHelperLibraryBPL::GetPointAtRelativeAngleUsingVector(
 		}
 		DrawDebugString(DebugWorld, Result, DebugText, 0, DebugColor.ToFColor(true), DebugLifetime, true, 1.0f);
 		DrawDebugSphere(DebugWorld, Result, 10.0f, 12, DebugColor.ToFColor(true), true, DebugLifetime, DEPTH_PRIORITY, 1);
-		FVector ArrowLineEnd = Location + NormalizedForward.RotateAngleAxis(Angle, FVector(0, 0, 1)) * (Distance - 10);
+		FVector ArrowLineEnd = LocationLocal + NormalizedForward.RotateAngleAxis(Angle, FVector(0, 0, 1)) * (Distance - 10);
 		if (OverrideZ > -999999.f)
 		{
 			ArrowLineEnd.Z = OverrideZ;
 		}
-		DrawDebugDirectionalArrow(DebugWorld, Location, ArrowLineEnd, RELATIVE_POINT_ARROW_SIZE, FColor::White, true, DebugLifetime, DEPTH_PRIORITY, 2);
+		DrawDebugDirectionalArrow(DebugWorld, LocationLocal, ArrowLineEnd, RELATIVE_POINT_ARROW_SIZE, FColor::White, true, DebugLifetime, DEPTH_PRIORITY, 2);
 	}
 
 	Point = Result;
-	PointRotation = (Point - Location).ToOrientationRotator();
+	PointRotation = (Point - LocationLocal).ToOrientationRotator();
 }
 
 void UUnrealHelperLibraryBPL::GetPointAtRelativeAngle(
