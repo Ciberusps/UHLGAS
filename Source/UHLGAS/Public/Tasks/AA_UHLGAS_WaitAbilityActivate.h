@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/Async/AbilityAsync.h"
-#include "AA_WaitAbilityActivate.generated.h"
+#include "AA_UHLGAS_WaitAbilityActivate.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class UHLGAS_API UAA_WaitAbilityActivate : public UAbilityAsync
+class UHLGAS_API UAA_UHLGAS_WaitAbilityActivate : public UAbilityAsync
 {
 	GENERATED_BODY()
 
@@ -25,16 +25,16 @@ public:
 	 * If used in an ability graph, this async action will wait even after activation ends. It's recommended to use WaitForAttributeChange instead.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "UnrealHelperLibrary|Ability|Tasks", meta = (DefaultToSelf = "TargetActor", BlueprintInternalUseOnly = "TRUE"))
-	static UAA_WaitAbilityActivate* WaitForAbilityActivate(AActor* TargetActor, FGameplayTag WithTag,
+	static UAA_UHLGAS_WaitAbilityActivate* WaitForAbilityActivate(AActor* TargetActor, FGameplayTag WithTag,
 		FGameplayTag WithoutTag, bool IncludeTriggeredAbilities=false, bool TriggerOnce=true);
 
 	UFUNCTION(BlueprintCallable, Category = "UnrealHelperLibrary|Ability|Tasks", meta = (DefaultToSelf = "TargetActor", BlueprintInternalUseOnly = "TRUE"))
-	static UAA_WaitAbilityActivate* WaitForAbilityActivateWithTagRequirements(AActor* TargetActor,
+	static UAA_UHLGAS_WaitAbilityActivate* WaitForAbilityActivateWithTagRequirements(AActor* TargetActor,
 		FGameplayTagRequirements TagRequirements, bool IncludeTriggeredAbilities = false,
 		bool TriggerOnce = true);
 
 	UFUNCTION(BlueprintCallable, Category = "UnrealHelperLibrary|Ability|Tasks", meta = (DefaultToSelf = "TargetActor", BlueprintInternalUseOnly = "TRUE"))
-	static UAA_WaitAbilityActivate* WaitForAbilityActivate_Query(AActor* TargetActor,
+	static UAA_UHLGAS_WaitAbilityActivate* WaitForAbilityActivate_Query(AActor* TargetActor,
 		FGameplayTagQuery Query, bool IncludeTriggeredAbilities = false, bool TriggerOnce = true);
 	
 

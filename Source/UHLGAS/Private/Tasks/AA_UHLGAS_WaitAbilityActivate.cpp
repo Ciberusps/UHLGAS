@@ -1,13 +1,13 @@
 // Pavel Penkov 2025 All Rights Reserved.
 
 
-#include "Tasks/AA_WaitAbilityActivate.h"
+#include "Tasks/AA_UHLGAS_WaitAbilityActivate.h"
 #include "AbilitySystemGlobals.h"
 #include "AbilitySystemComponent.h"
 
-#include UE_INLINE_GENERATED_CPP_BY_NAME(AA_WaitAbilityActivate)
+#include UE_INLINE_GENERATED_CPP_BY_NAME(AA_UHLGAS_WaitAbilityActivate)
 
-void UAA_WaitAbilityActivate::OnAbilityActivate(UGameplayAbility* ActivatedAbility)
+void UAA_UHLGAS_WaitAbilityActivate::OnAbilityActivate(UGameplayAbility* ActivatedAbility)
 {
 	if (!IncludeTriggeredAbilities && ActivatedAbility->IsTriggered())
 	{
@@ -54,10 +54,10 @@ void UAA_WaitAbilityActivate::OnAbilityActivate(UGameplayAbility* ActivatedAbili
 	}
 }
 
-UAA_WaitAbilityActivate* UAA_WaitAbilityActivate::WaitForAbilityActivate(AActor* TargetActor,
+UAA_UHLGAS_WaitAbilityActivate* UAA_UHLGAS_WaitAbilityActivate::WaitForAbilityActivate(AActor* TargetActor,
                                                                       FGameplayTag InWithTag, FGameplayTag InWithoutTag, bool InIncludeTriggeredAbilities, bool InTriggerOnce)
 {
-	UAA_WaitAbilityActivate* MyObj = NewObject<UAA_WaitAbilityActivate>();
+	UAA_UHLGAS_WaitAbilityActivate* MyObj = NewObject<UAA_UHLGAS_WaitAbilityActivate>();
 	MyObj->SetAbilityActor(TargetActor);
 	MyObj->WithTag = InWithTag;
 	MyObj->WithoutTag = InWithoutTag;
@@ -66,11 +66,11 @@ UAA_WaitAbilityActivate* UAA_WaitAbilityActivate::WaitForAbilityActivate(AActor*
 	return MyObj;
 }
 
-UAA_WaitAbilityActivate* UAA_WaitAbilityActivate::WaitForAbilityActivateWithTagRequirements(
+UAA_UHLGAS_WaitAbilityActivate* UAA_UHLGAS_WaitAbilityActivate::WaitForAbilityActivateWithTagRequirements(
 	AActor* TargetActor, FGameplayTagRequirements TagRequirements, bool InIncludeTriggeredAbilities,
 	bool InTriggerOnce)
 {
-	UAA_WaitAbilityActivate* MyObj = NewObject<UAA_WaitAbilityActivate>();
+	UAA_UHLGAS_WaitAbilityActivate* MyObj = NewObject<UAA_UHLGAS_WaitAbilityActivate>();
 	MyObj->SetAbilityActor(TargetActor);
 	MyObj->TagRequirements = TagRequirements;
 	MyObj->IncludeTriggeredAbilities = InIncludeTriggeredAbilities;
@@ -78,10 +78,10 @@ UAA_WaitAbilityActivate* UAA_WaitAbilityActivate::WaitForAbilityActivateWithTagR
 	return MyObj;
 }
 
-UAA_WaitAbilityActivate* UAA_WaitAbilityActivate::WaitForAbilityActivate_Query(
+UAA_UHLGAS_WaitAbilityActivate* UAA_UHLGAS_WaitAbilityActivate::WaitForAbilityActivate_Query(
 	AActor* TargetActor, FGameplayTagQuery Query, bool InIncludeTriggeredAbilities, bool InTriggerOnce)
 {
-	UAA_WaitAbilityActivate* MyObj = NewObject<UAA_WaitAbilityActivate>();
+	UAA_UHLGAS_WaitAbilityActivate* MyObj = NewObject<UAA_UHLGAS_WaitAbilityActivate>();
 	MyObj->SetAbilityActor(TargetActor);
 	MyObj->Query = Query;
 	MyObj->IncludeTriggeredAbilities = InIncludeTriggeredAbilities;
@@ -89,13 +89,13 @@ UAA_WaitAbilityActivate* UAA_WaitAbilityActivate::WaitForAbilityActivate_Query(
 	return MyObj;
 }
 
-void UAA_WaitAbilityActivate::Activate()
+void UAA_UHLGAS_WaitAbilityActivate::Activate()
 {
 	Super::Activate();
 
 	if (UAbilitySystemComponent* ASC = GetAbilitySystemComponent())
 	{
-		OnAbilityActivateDelegateHandle = ASC->AbilityActivatedCallbacks.AddUObject(this, &UAA_WaitAbilityActivate::OnAbilityActivate);
+		OnAbilityActivateDelegateHandle = ASC->AbilityActivatedCallbacks.AddUObject(this, &UAA_UHLGAS_WaitAbilityActivate::OnAbilityActivate);
 	}
 	else
 	{
@@ -103,7 +103,7 @@ void UAA_WaitAbilityActivate::Activate()
 	}
 }
 
-void UAA_WaitAbilityActivate::EndAction()
+void UAA_UHLGAS_WaitAbilityActivate::EndAction()
 {
 	if (UAbilitySystemComponent* ASC = GetAbilitySystemComponent())
 	{

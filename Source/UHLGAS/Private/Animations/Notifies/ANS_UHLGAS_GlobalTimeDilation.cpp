@@ -1,14 +1,14 @@
 // Pavel Penkov 2025 All Rights Reserved.
 
 
-#include "Animations/Notifies/ANS_GlobalTimeDilation.h"
+#include "Animations/Notifies/ANS_UHLGAS_GlobalTimeDilation.h"
 
 #include "Animation/AnimMontage.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 
-void UANS_GlobalTimeDilation::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime, const FAnimNotifyEventReference& EventReference)
+void UANS_UHLGAS_GlobalTimeDilation::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime, const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyTick(MeshComp, Animation, FrameDeltaTime, EventReference);
 
@@ -18,7 +18,7 @@ void UANS_GlobalTimeDilation::NotifyTick(USkeletalMeshComponent* MeshComp, UAnim
 	UGameplayStatics::SetGlobalTimeDilation(MeshComp->GetOwner(), GlobalTimeDilationCurveValue);
 }
 
-void UANS_GlobalTimeDilation::OnMontageBlendingOut(UAnimMontage* Montage, bool bInterrupted)
+void UANS_UHLGAS_GlobalTimeDilation::OnMontageBlendingOut(UAnimMontage* Montage, bool bInterrupted)
 {
 	Super::OnMontageBlendingOut(Montage, bInterrupted);
 

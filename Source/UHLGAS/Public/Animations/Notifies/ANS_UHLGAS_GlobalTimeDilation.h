@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Animations/Notifies/ANS_ActivateAbility.h"
-#include "ANS_GlobalTimeDilation.generated.h"
+#include "ANS_UHLGAS_GlobalTimeDilation.generated.h"
 
 /**
  * 
  */
 UCLASS(Blueprintable, meta=(ToolTip="Controls when GlobalTimeDilation can be changed by GlobalTimeDilation Curve"))
-class UHLGAS_API UANS_GlobalTimeDilation : public UANS_UHL_Base
+class UHLGAS_API UANS_UHLGAS_GlobalTimeDilation : public UANS_UHL_Base
 {
 	GENERATED_BODY()
 	
