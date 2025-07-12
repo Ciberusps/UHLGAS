@@ -7,10 +7,12 @@
 #include "ANS_ChangeRotationRate.generated.h"
 
 class UCharacterMovementComponent;
-// class UUHLCharacterMovementComponent;
 
 /**
- * Requires using "UHLCharacterMovementComponent" as MovementComponent
+ * better to use UANS_UHL_AllowCharacterRotation it combines both
+ * - bAllowPhysicsRotationDuringAnimRootMotion
+ * - and opportunity to change RotationRate
+ * thats much common use case than just changing rotation rate
  */
 UCLASS()
 class UNREALHELPERLIBRARY_API UANS_ChangeRotationRate : public UANS_UHL_Base
@@ -40,7 +42,7 @@ private:
 	FRotator InitialRotationRate = FRotator::ZeroRotator;
 
 	TWeakObjectPtr<UCharacterMovementComponent> CharacterMovementComponent;
-	
+
 	UFUNCTION()
 	void ReturnInitialRotationRate();
 
