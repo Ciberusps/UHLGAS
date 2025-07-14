@@ -1101,6 +1101,127 @@ bool UUnrealHelperLibraryBPL::IsLevelHasSublevels(UObject* WorldContextObject)
 	return StreamingLevels.Num() > 0;
 }
 
+void UUnrealHelperLibraryBPL::GetAllStreamingLevels(
+	UObject* WorldContextObject, TArray<ULevelStreaming*>& OutStreamingLevels)
+{
+	OutStreamingLevels.Empty();
+
+	if (!WorldContextObject)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("UUnrealHelperLibraryBPL::GetAllStreamingLevels: Invalid WorldContextObject"));
+		return;
+	}
+
+	UWorld* World = GEngine
+		? GEngine->GetWorldFromContextObjectChecked(WorldContextObject)
+		: nullptr;
+
+	if (!World)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("UUnrealHelperLibraryBPL::GetAllStreamingLevels: Could not resolve UWorld from context"));
+		return;
+	}
+
+	// Grab the streaming levels array
+	OutStreamingLevels = World->GetStreamingLevels();
+}
+
+void UUnrealHelperLibraryBPL::GetAllSubLevels(UObject* WorldContextObject, TArray<ULevel*>& OutSubLevels)
+{
+	OutSubLevels.Empty();
+
+	if (!WorldContextObject)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("GetAllSubLevels: Invalid WorldContextObject"));
+		return;
+	}
+
+	// Resolve the world from the context object
+	UWorld* World = GEngine
+		? GEngine->GetWorldFromContextObjectChecked(WorldContextObject)
+		: nullptr;
+
+	if (!World)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("GetAllSubLevels: Could not resolve UWorld from context"));
+		return;
+	}
+
+	// World->GetLevels() returns every ULevel* currently loaded:
+	//   - The Persistent Level
+	//   - Any Streaming Levels that are loaded into memory
+	OutSubLevels = World->GetLevels();
+}
+
+bool UUnrealHelperLibraryBPL::IsMapPackageName(const FString& PackageName)
+{
+	// Convert to filename to check extension
+	FString Filename;
+	if (FPackageName::TryConvertLongPackageNameToFilename(PackageName, Filename, FPackageName::GetMapPackageExtension()))
+	{
+		// Ensure the file actually exists on disk (optional)
+		return FPaths::FileExists(Filename);
+	}
+	return false;
+}
+
+FString UUnrealHelperLibraryBPL::GetCleanLevelName(const FString& PackageName)
+{
+	// Turn "/Game/Maps/MyMap" into "MyMap" (or "UEDPIE_0_MyMap" if in PIE)
+	const FString ShortName = FPackageName::GetShortName(PackageName);
+
+	// If PIE, find the first "_" and strip off the prefix
+	if (ShortName.StartsWith(TEXT("UEDPIE_")))
+	{
+		int32 UnderscoreIndex = INDEX_NONE;
+		// Finds the first underscore after "UEDPIE"
+		if (ShortName.FindChar(TEXT('_'), UnderscoreIndex))
+		{
+			// Chop off everything up to (and including) that underscore
+			return ShortName.Mid(UnderscoreIndex + 1);
+		}
+	}
+
+	// Otherwise, just return the plain short name
+	return ShortName;
+}
+
+void UUnrealHelperLibraryBPL::GetAllSubLevelPackageNames(UObject* WorldContextObject, TArray<FString>& OutLevelPackageNames)
+{
+	OutLevelPackageNames.Empty();
+
+	if (!WorldContextObject) { return; }
+
+	UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject);
+	if (!World) { return; }
+
+	// 1) Persistent Level
+	// if (ULevel* Persistent = World->PersistentLevel)
+	// {
+	// 	const FString Raw = Persistent->GetOutermost()->GetName();
+	// 	if (IsMapPackageName(Raw))
+	// 	{
+	// 		OutLevelPackageNames.Add(Raw);
+	// 	}
+	// }
+
+	// 2) All streaming levels (loaded or not)
+	for (ULevelStreaming* StreamingLevel : World->GetStreamingLevels())
+	{
+		if (!StreamingLevel) continue;
+
+		const FString Raw = StreamingLevel->GetWorldAssetPackageName();
+		const FString CleanName = GetCleanLevelName(Raw);
+
+		// Only include if it’s actually a .umap in your project
+		if (IsMapPackageName(Raw))
+		{
+			OutLevelPackageNames.Add(CleanName);
+		}
+	}
+}
+
+
 FColor UUnrealHelperLibraryBPL::RandomColor(int32 Seed)
 {
 	if (Seed >= 0)

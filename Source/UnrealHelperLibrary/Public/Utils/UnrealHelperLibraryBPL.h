@@ -306,6 +306,40 @@ public:
 	UFUNCTION(BlueprintPure, Category = "UnrealHelperLibrary|World", meta = (Keywords = "UnrealHelperLibrary world map level"))
 	static bool IsLevelHasSublevels(UObject* WorldContextObject);
 	/** ~Utils **/
+	
+	/** World **/
+
+	/** 
+	* Returns all ULevelStreaming objects in the current world. 
+	* @param WorldContextObject  Context (e.g. self, GetGameInstance, etc.)
+	* @param OutStreamingLevels  Array of streaming‐level objects.
+	*/
+	UFUNCTION(BlueprintCallable, Category="World|Streaming Levels", meta=(WorldContext="WorldContextObject"))
+	static void GetAllStreamingLevels(UObject* WorldContextObject, TArray<ULevelStreaming*>& OutStreamingLevels);
+
+	/**
+	 * Returns all sub‐levels currently loaded in the world (persistent + streamed‑in).
+	 * @param WorldContextObject  Context object to resolve the UWorld (e.g. self, GetGameInstance, etc.).
+	 * @param OutSubLevels        Array of all ULevel pointers in this world.
+	 */
+	UFUNCTION(BlueprintCallable, Category="World|Levels", meta=(WorldContext="WorldContextObject"))
+	static void GetAllSubLevels(UObject* WorldContextObject, TArray<ULevel*>& OutSubLevels);
+
+	static bool IsMapPackageName(const FString& PackageName);
+	static FString GetCleanLevelName(const FString& PackageName);
+	
+	/**
+		 * Returns the package names of *all* sub‑levels in the world:
+		 *  - The persistent level
+		 *  - Every streaming‐level, regardless of whether it's loaded yet
+		 *
+		 * @param WorldContextObject   Any object in the target world (e.g. Self, GameInstance, etc.)
+		 * @param OutLevelPackageNames Array of level package names (e.g. "/Game/Maps/MySubLevel")
+		 */
+	UFUNCTION(BlueprintCallable, Category="World|Levels", meta=(WorldContext="WorldContextObject"))
+	static void GetAllSubLevelPackageNames(UObject* WorldContextObject, TArray<FString>& OutLevelPackageNames);
+	
+	/** ~World **/
 
 	/** Colors **/
 	// "Makes a random but quite nice color" - literally C++ FColor::MakeRandomColor
