@@ -33,6 +33,8 @@ public:
     // TODO: choosing debug subsystem class??? user can extend debug subsystem with own things?
     // TSubclassOf<UUHLDebugSystemSubsystem> UHLDebugSubsystemClass;
 
+	void OnEnabledDebugCategoryEntryChanged(FGameplayTag ChangedDebugCategoryTag, bool bEnabled);
+	
     static TArray<FUHLDebugCategory> GET_DEFAULT_UHL_DEBUG_CATEGORIES();
 
 protected:

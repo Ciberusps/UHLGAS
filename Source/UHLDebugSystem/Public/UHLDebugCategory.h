@@ -33,6 +33,11 @@ struct FUHLDebugCategory
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UHLDebugCategory", meta=(Categories = "UHL.DebugCategory,DebugCategory"))
     FGameplayTagContainer Tags = {};
 
+	// What DebugCategories required to be enabled for this DebugCategory. On enabling this DebugCategory it will try to enable required DebgugCategories disable other debug categories that match "Required" tags
+	// WARNING for better experience tags are filtered add child to "UHL.DebugCategory" or "DebugCategory"
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UHLDebugCategory", meta=(Categories = "UHL.DebugCategory,DebugCategory"))
+	FGameplayTagContainer RequiredDebugCategories = {};
+	
     // What DebugCategories this DebugCategory blocks. On enabling this DebugCategory it will disable other debug categories that match "Blocks" tags
     // WARNING for better experience tags are filtered add child to "UHL.DebugCategory" or "DebugCategory"
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UHLDebugCategory", meta=(Categories = "UHL.DebugCategory,DebugCategory"))

@@ -10,6 +10,10 @@
 #include "Development/UHLDebugSystemSettings.h"
 #include "UnrealHelperLibraryTypes.h"
 #include "Utils/UnrealHelperLibraryBPL.h"
+#if WITH_EDITOR
+#include "Framework/Notifications/NotificationManager.h"
+#include "Widgets/Notifications/SNotificationList.h"
+#endif
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(UHLDebugSystemSubsystem)
 
@@ -184,6 +188,17 @@ void UUHLDebugSystemSubsystem::EnableDebugCategory(const FGameplayTag DebugCateg
             }
         }
 
+    	// Enable required DebugCategories
+    	for (const FUHLDebugCategory& DebugCategory : DebugCategories)
+    	{
+    		if (DebugCategory != *UHLDebugCategory
+				&& !UHLDebugCategory->RequiredDebugCategories.IsEmpty()
+				&& DebugCategory.Tags.HasAny(UHLDebugCategory->RequiredDebugCategories))
+    		{
+    			EnableDebugCategory(DebugCategory.Tags.First(), true);
+    		}
+    	}
+
         bEnabled = UHLDebugCategory->TryEnable(this);
     }
     else
@@ -192,6 +207,44 @@ void UUHLDebugSystemSubsystem::EnableDebugCategory(const FGameplayTag DebugCateg
         // TODO remove
             // || (bIsSetuping && UHLDebugCategory->bForceComponentsDeactivateOnEnd))
         {
+        	// Check that its not required by some other DebugCategory
+        	bool bHasDependantDebugCategory = false;
+        	FUHLDebugCategory DependantDebugCategory;
+        	for (const FUHLDebugCategory& DebugCategory : DebugCategories)
+        	{
+        		if (DebugCategory != *UHLDebugCategory
+					&& !DebugCategory.RequiredDebugCategories.IsEmpty()
+					&& DebugCategory.RequiredDebugCategories.HasAny(UHLDebugCategory->Tags))
+        		{
+        			bHasDependantDebugCategory = true;
+        			DependantDebugCategory = DebugCategory;
+        			// EnableDebugCategory(DebugCategory.Tags.First(), true);
+        		}
+        	}
+        	if (bHasDependantDebugCategory)
+        	{
+        		DependantDebugCategory.TryDisable(this);
+
+        		#if WITH_EDITOR
+					// Create the notification info
+        			FText ToastText = FText::Format(FTextFormat::FromString(TEXT("UHLDebugSystem: Dependant DebugCategory {0} also disabled")), FText::FromString(DependantDebugCategory.Name));
+					FNotificationInfo Info(ToastText);
+					Info.bFireAndForget = true;         // auto‑expire
+					Info.FadeOutDuration = 0.5f;        // smooth fade
+					Info.ExpireDuration = 5.0f;         // seconds on‑screen
+					Info.bUseThrobber = false;          // no spinning icon
+					Info.bUseLargeFont = false;         
+					Info.bUseSuccessFailIcons = false;  // we’ll show a warning icon manually
+		
+					// Optionally give it a warning icon on the left:
+					static const FName WarningIconName = TEXT("Icons.Warning"); 
+					Info.Image = FCoreStyle::Get().GetBrush(WarningIconName);
+		
+					// Fire it off
+					FSlateNotificationManager::Get().AddNotification(Info);
+        		#endif
+        	}
+        	
             UHLDebugCategory->TryDisable(this);
         }
     }

@@ -15,6 +15,49 @@
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(UHLDebugSystemSettings)
 
+void UUHLDebugSystemSettings::OnEnabledDebugCategoryEntryChanged(
+	FGameplayTag ChangedDebugCategoryTag, bool bEnabled)
+{
+	if (ChangedDebugCategoryTag != FGameplayTag::EmptyTag)
+	{
+		FUHLDebugCategory* UHLDebugCategory = DebugCategories.FindByPredicate([=](const FUHLDebugCategory& DebugCategory)
+		{
+			return DebugCategory.Tags.HasAnyExact(FGameplayTagContainer(ChangedDebugCategoryTag));
+		});
+		if (UHLDebugCategory != nullptr)
+		{
+            	
+			for (FGameplayTag BlockedTag : UHLDebugCategory->Blocks.GetGameplayTagArray())
+			{
+				for (TTuple<FGameplayTag, bool>& EnabledDebugCategory : EnabledDebugCategories)
+				{
+					if (!EnabledDebugCategory.Key.MatchesTag(ChangedDebugCategoryTag)
+						&& EnabledDebugCategory.Key.MatchesTag(BlockedTag))
+					{
+						EnabledDebugCategory.Value = false;
+					}
+				}
+			}
+
+			for (FGameplayTag RequiredDebugCategoryTag : UHLDebugCategory->RequiredDebugCategories.GetGameplayTagArray())
+			{
+				for (TTuple<FGameplayTag, bool>& EnabledDebugCategory : EnabledDebugCategories)
+				{
+					if (!EnabledDebugCategory.Key.MatchesTag(ChangedDebugCategoryTag)
+						&& EnabledDebugCategory.Key.MatchesTag(RequiredDebugCategoryTag))
+					{
+						EnabledDebugCategory.Value = true;
+					}
+				}
+			}
+            	
+			// UpdateEnabledDebugCategoriesList();
+		}
+	}
+	
+	EnabledDebugCategories[ChangedDebugCategoryTag] = bEnabled;
+}
+
 TArray<FUHLDebugCategory> UUHLDebugSystemSettings::GET_DEFAULT_UHL_DEBUG_CATEGORIES()
 {
     TArray<FUHLDebugCategory> DEFAULT_UHL_DEBUG_CATEGORIES = {};
@@ -120,38 +163,18 @@ void UUHLDebugSystemSettings::PostEditChangeChainProperty(struct FPropertyChange
     // disable other DebugCategories by "Blocks" tags
     if (bEditingEnabledDebugCategories)
     {
+    	bool NewValue = false;
         FGameplayTag ChangedDebugCategoryTag = FGameplayTag::EmptyTag;
 		for (const TTuple<FGameplayTag, bool>& EnabledDebugCategory : EnabledDebugCategories)
 		{
-			if (LastEnabledDebugCategories[EnabledDebugCategory.Key] != EnabledDebugCategory.Value
-				&& EnabledDebugCategory.Value == true)
+			if (LastEnabledDebugCategories[EnabledDebugCategory.Key] != EnabledDebugCategory.Value)
 			{
+				NewValue = EnabledDebugCategory.Value;
 				ChangedDebugCategoryTag = EnabledDebugCategory.Key;
 			}
 		}
 
-        if (ChangedDebugCategoryTag != FGameplayTag::EmptyTag)
-        {
-            FUHLDebugCategory* UHLDebugCategory = DebugCategories.FindByPredicate([=](const FUHLDebugCategory& DebugCategory)
-            {
-                return DebugCategory.Tags.HasAnyExact(FGameplayTagContainer(ChangedDebugCategoryTag));
-            });
-            if (UHLDebugCategory != nullptr)
-            {
-                for (FGameplayTag BlockedTag : UHLDebugCategory->Blocks.GetGameplayTagArray())
-                {
-                    for (TTuple<FGameplayTag, bool>& EnabledDebugCategory : EnabledDebugCategories)
-                    {
-                        if (!EnabledDebugCategory.Key.MatchesTag(ChangedDebugCategoryTag)
-                            && EnabledDebugCategory.Key.MatchesTag(BlockedTag))
-                        {
-							EnabledDebugCategory.Value = false;
-                        }
-                    }
-                }
-                // UpdateEnabledDebugCategoriesList();
-            }
-        }
+    	OnEnabledDebugCategoryEntryChanged(ChangedDebugCategoryTag, NewValue);
     }
 
     if (PropertyName == GET_MEMBER_NAME_CHECKED(UUHLDebugSystemSettings, bExcludeDefaultUHLDebugCategories))

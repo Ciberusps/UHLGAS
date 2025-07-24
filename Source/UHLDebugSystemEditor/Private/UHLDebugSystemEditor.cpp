@@ -54,7 +54,8 @@ namespace UHLDebugSystemEditorFunctionLibrary
 		
 		UUHLDebugSystemSettings* Settings = GetMutableDefault<UUHLDebugSystemSettings>();
 		bool bEnabled = Settings->EnabledDebugCategories[DebugCategoryTag];
-		Settings->EnabledDebugCategories.Emplace(DebugCategoryTag, !bEnabled);	
+		Settings->EnabledDebugCategories.Emplace(DebugCategoryTag, !bEnabled);
+    	Settings->OnEnabledDebugCategoryEntryChanged(DebugCategoryTag, !bEnabled);
 		
 		// if this controls editor UI, you may need to force a menu refresh:
 		// FSlateApplication::Get().DismissAllMenus();
