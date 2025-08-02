@@ -166,7 +166,7 @@ void UAT_InterpolateToPosition::TickTask(float DeltaTime)
             {
                 const FVector ComponentInterpolationFraction = LerpCurveVector->GetVectorValue(MoveFraction);
                 NewLocation = FMath::Lerp<FVector, FVector>(StartLocation, TargetLocation, ComponentInterpolationFraction);
-                // TODO NewRotation =
+            	NewRotation = FRotator::ZeroRotator; // TODO: make it work, here its initialized to remove warning
             }
             else
             {

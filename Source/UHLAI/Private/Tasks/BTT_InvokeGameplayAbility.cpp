@@ -35,7 +35,7 @@ EBTNodeResult::Type UBTT_InvokeGameplayAbility::ExecuteTask(UBehaviorTreeCompone
     UAbilitySystemComponent* ASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(AIOwner->GetPawn());
     if (!ASC)
     {
-        if (bDebugMessages)
+        if (bDebugMessages.GetValue(OwnerComp))
         {
             UUnrealHelperLibraryBPL::DebugPrintStrings(FString::Printf(TEXT("[BTT_InvokeGameplayAbility] OwnerActor \"%s\" don't have AbilitySystem(implements IAbilitySystemInterface) add it"), *AIOwner->GetPawn()->GetName()));
         }
@@ -51,7 +51,7 @@ EBTNodeResult::Type UBTT_InvokeGameplayAbility::ExecuteTask(UBehaviorTreeCompone
     for (FGameplayAbilitySpecHandle GameplayAbilitiesSpecSearch : GameplayAbilitiesSpecs)
     {
         FGameplayAbilitySpec* AbilitySpecSearch = ASC->FindAbilitySpecFromHandle(GameplayAbilitiesSpecSearch);
-        if (AbilitySpecSearch->Ability->AbilityTags.HasAny(GameplayTag.GetValue(OwnerComp).GetSingleTagContainer()))
+        if (AbilitySpecSearch->Ability->GetAssetTags().HasAny(GameplayTag.GetValue(OwnerComp).GetSingleTagContainer()))
         {
             AbilitySpec = AbilitySpecSearch;
             GameplayAbilitiesSpecHandle = &GameplayAbilitiesSpecSearch;
@@ -64,7 +64,7 @@ EBTNodeResult::Type UBTT_InvokeGameplayAbility::ExecuteTask(UBehaviorTreeCompone
     {
 	    if (GameplayAbilitySpecFound && AbilitySpec != nullptr)
 	    {
-	        if (bWaitForFinishing)
+	        if (bWaitForFinishing.GetValue(OwnerComp))
 	        {
 	            ASC->OnAbilityEnded.AddUObject(this, &UBTT_InvokeGameplayAbility::OnAbilityEnded, &OwnerComp);
 	        }
@@ -72,19 +72,19 @@ EBTNodeResult::Type UBTT_InvokeGameplayAbility::ExecuteTask(UBehaviorTreeCompone
 
 	        Result = bAbilityActivated ? EBTNodeResult::InProgress : EBTNodeResult::Failed;
 
-	        if (!bWaitForFinishing)
+	        if (!bWaitForFinishing.GetValue(OwnerComp))
 	        {
 	            Result = EBTNodeResult::Succeeded;
 	        }
 
-	        if (bDebugMessages)
+	        if (bDebugMessages.GetValue(OwnerComp))
 	        {
 	            UUnrealHelperLibraryBPL::DebugPrintStrings(FString::Printf(TEXT("[BTT_InvokeGameplayAbility] TryActivateAbility - \"%s\" - %s"), *GameplayTag.GetValue(OwnerComp).ToString(), bAbilityActivated ? TEXT("activated") : TEXT("failed")));
 	        }
 	    }
 	    else
 	    {
-	        if (bDebugMessages)
+	        if (bDebugMessages.GetValue(OwnerComp))
 	        {
 	            UUnrealHelperLibraryBPL::DebugPrintStrings(FString::Printf(TEXT("[BTT_InvokeGameplayAbility] Ability - \"%s\" - not found, give it to character if forgot"), *GameplayTag.GetValue(OwnerComp).ToString()));
 	        }
@@ -115,12 +115,12 @@ EBTNodeResult::Type UBTT_InvokeGameplayAbility::AbortTask(UBehaviorTreeComponent
 		{
 			const FGameplayTagContainer TagsContainer = FGameplayTagContainer(GameplayTag.GetValue(OwnerComp));
 			ASC->CancelAbilities(&TagsContainer);
-			if (bWaitForFinishing)
+			if (bWaitForFinishing.GetValue(OwnerComp))
 			{
 				ASC->OnAbilityEnded.RemoveAll(this);
 			}
 	
-			if (bDebugMessages)
+			if (bDebugMessages.GetValue(OwnerComp))
 			{
 				UUnrealHelperLibraryBPL::DebugPrintStrings(FString::Printf(TEXT("[BTT_InvokeGameplayAbility] Task was aborted, CancelAbility - %s"), *GameplayTag.GetValue(OwnerComp).ToString()));
 			}
@@ -169,7 +169,7 @@ void UBTT_InvokeGameplayAbility::OnAbilityEnded(
 	const FAbilityEndedData& AbilityEndedData, UBehaviorTreeComponent* OwnerComp)
 {
     // if not works check "AbilitySystemComponentTests.IsSameAbility"
-    if (!AbilityEndedData.AbilityThatEnded->AbilityTags.HasAllExact(FGameplayTagContainer(GameplayTag.GetValue(OwnerComp)))) return;
+    if (!AbilityEndedData.AbilityThatEnded->GetAssetTags().HasAllExact(FGameplayTagContainer(GameplayTag.GetValue(OwnerComp)))) return;
 
     const EBTNodeResult::Type NodeResult(EBTNodeResult::Succeeded);
 
@@ -179,7 +179,7 @@ void UBTT_InvokeGameplayAbility::OnAbilityEnded(
 
 	if (AbilityOwner == BehaviorOwner)
 	{
-		const EBTNodeResult::Type CancelResult = bTreatCancelledAbilityAsSuccess ? EBTNodeResult::Succeeded : EBTNodeResult::Failed;
+		const EBTNodeResult::Type CancelResult = bTreatCancelledAbilityAsSuccess.GetValue(OwnerComp) ? EBTNodeResult::Succeeded : EBTNodeResult::Failed;
 		const EBTNodeResult::Type TaskResult = AbilityEndedData.bWasCancelled ? CancelResult : EBTNodeResult::Succeeded;
 		FinishLatentTask(*OwnerComp, TaskResult);
 	}

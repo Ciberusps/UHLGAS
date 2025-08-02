@@ -232,7 +232,7 @@ void UUHLGASBlueprintLibrary::FindAbilitySpecByTag(
 		if (AbilityCDO)
 		{
 			// combine ability‐level and dynamic tags
-			const FGameplayTagContainer& StaticTags = AbilityCDO->AbilityTags;
+			const FGameplayTagContainer& StaticTags = AbilityCDO->GetAssetTags();
 			const FGameplayTagContainer& DynamicTags = Spec.GetDynamicSpecSourceTags();
 
 			// If either has our desired tag, return this spec

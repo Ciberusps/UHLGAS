@@ -17,7 +17,7 @@ EBTNodeResult::Type UBTT_DebugPrintString::ExecuteTask(UBehaviorTreeComponent& O
     UKismetSystemLibrary::PrintString(
         nullptr, GetFinalString(),
         true, true,
-        Color, Duration, Key
+        Color, Duration.GetValue(OwnerComp), Key.GetValue(OwnerComp)
     );
 	return Super::ExecuteTask(OwnerComp, NodeMemory);
 }
@@ -30,9 +30,9 @@ FString UBTT_DebugPrintString::GetStaticDescription() const
 FString UBTT_DebugPrintString::GetFinalString() const
 {
     FString Result = "";
-    for (FString PrintString : PrintStrings)
+    for (FValueOrBBKey_String PrintString : PrintStrings)
     {
-        Result.Append(PrintString);
+        Result.Append(PrintString.ToString());
     }
     return Result;
 }
