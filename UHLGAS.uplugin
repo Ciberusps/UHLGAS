@@ -1,0 +1,39 @@
+{
+  "FileVersion": 3,
+  "Version": 1,
+  "VersionName": "1.0",
+  "FriendlyName": "UHLGAS",
+  "Description": "GAS helpers",
+  "Category": "Gameplay",
+  "EnabledByDefault": true,
+  "CanContainContent": true,
+  "Modules": [
+    {
+      "Name": "UHLGAS",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "UHLGASDebug",
+      "Type": "Runtime",
+      "LoadingPhase": "Default",
+      "PlatformAllowList": [
+        "Win64"
+      ]
+    }
+  ],
+  "Plugins": [
+    {
+      "Name": "GameplayAbilities",
+      "Enabled": true
+    },
+    {
+      "Name": "EnhancedInput",
+      "Enabled": true
+    },
+    {
+      "Name": "Niagara",
+      "Enabled": true
+    }
+  ]
+}

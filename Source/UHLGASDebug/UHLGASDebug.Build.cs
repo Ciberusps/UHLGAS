@@ -2,9 +2,12 @@
 
 using UnrealBuildTool;
 
-public class UHLGAS : ModuleRules
+// Module that helps debugging UnrealHelperLibrary and can depend on all other modules
+// Don't mess with UHLDebugSystem - that completely independent system from UHL
+// and probably should be other plugin 
+public class UHLGASDebug : ModuleRules
 {
-	public UHLGAS(ReadOnlyTargetRules Target) : base(Target)
+	public UHLGASDebug(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
@@ -32,7 +35,7 @@ public class UHLGAS : ModuleRules
 				"GameplayTasks",
 				"EnhancedInput", 
 				
-				"NiagaraAnimNotifies", 
+				"UHLGAS",  
 			}
 			);
 
@@ -43,10 +46,10 @@ public class UHLGAS : ModuleRules
 				"CoreUObject",
 				"Engine",
 				
+				"Slate",
+				"SlateCore",
+				"UMG",
 				"DeveloperSettings",
-				
-				"UnrealHelperLibrary",
-				"UHLAI",
 			}
 			);
 
