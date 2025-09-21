@@ -6,9 +6,10 @@
 #include "UHLAbilitySet.h"
 #include "UHLGASBlueprintLibrary.h"
 #include "Abilities/UHLGameplayAbility.h"
-#include "Core/UHLGameplayTags.h"
+#include "Core/UHLGASGameplayTags.h"
 #include "Development/UHLGASSettings.h"
-#include "Utils/UnrealHelperLibraryBPL.h"
+#include "Engine/Engine.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(UHLAbilitySystemComponent)
 
@@ -367,7 +368,7 @@ void UUHLAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGame
 {
     if (!bUseInputConfig) return;
 
-	if (HasMatchingGameplayTag(UHLGameplayTags::TAG_Gameplay_AbilityInputBlocked))
+    if (HasMatchingGameplayTag(UHLGASGameplayTags::TAG_Gameplay_AbilityInputBlocked))
 	{
 		ClearAbilityInput();
 		return;
@@ -450,7 +451,7 @@ void UUHLAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGame
 	    if (bUseAbilityInputCache && AbilitySpecHandle.IsValid())
 	    {
 	        // works if not using cache windows or use them and now in "CatchTo AbilityInputCache" window
-            if (!bUseInputCacheWindows || (bUseInputCacheWindows && HasMatchingGameplayTag(UHLGameplayTags::TAG_UHL_AbilityInputCache_Catching)))
+            if (!bUseInputCacheWindows || (bUseInputCacheWindows && HasMatchingGameplayTag(UHLGASGameplayTags::TAG_UHL_AbilityInputCache_Catching)))
             {
 				FGameplayAbilitySpec* AbilitySpec = FindAbilitySpecFromHandle(AbilitySpecHandle);
 				if (AbilitySpec->Ability)
@@ -464,11 +465,12 @@ void UUHLAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGame
 						}
 					}
 
-					if (GameplayAbility->bCacheInput && bActivated)
-					{
-						bAtLeastOneCachedAbilityActivated = true;
-						UUnrealHelperLibraryBPL::DebugPrintStrings(FString::Printf(TEXT("At least one activated %s"), *GameplayAbility->GetAssetTags().First().ToString()));
-					}
+                    if (GameplayAbility->bCacheInput && bActivated)
+                    {
+                        bAtLeastOneCachedAbilityActivated = true;
+                    	FString DebugMessage = FString::Printf(TEXT("[UHLGAS] Activated %s"), *GameplayAbility->GetAssetTags().First().ToString());
+                    	UKismetSystemLibrary::PrintString(nullptr, DebugMessage, false, true, FColor::Green, 2.0f);
+                    }
 				}
 			}
 	    }

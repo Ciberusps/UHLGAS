@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemGlobals.h"
 #include "UHLAbilitySystemComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(UHLGameplayAbility)
 
@@ -222,15 +223,8 @@ void UUHLGameplayAbility::CheckCancelReminder()
 {
 	if (bCancelRequested && IsActive())
 	{
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(
-				-1,
-				5.0f,
-				FColor::Yellow,
-				TEXT("Warning: ReleaseCancellation() was not called for this ability within 60 seconds.")
-			);
-		}
+		FString Message = TEXT("Warning: ReleaseCancellation() was not called for this ability within 60 seconds.");
+		UKismetSystemLibrary::PrintString(nullptr, Message, true, true, FColor::Yellow, 5.0f);
 	}
 }
 #endif

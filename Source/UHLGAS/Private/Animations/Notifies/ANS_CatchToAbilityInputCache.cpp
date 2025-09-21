@@ -6,7 +6,7 @@
 #include "AbilitySystemInterface.h"
 #include "UHLAbilitySystemComponent.h"
 #include "Components/SkeletalMeshComponent.h"
-#include "Core/UHLGameplayTags.h"
+#include "Core/UHLGASGameplayTags.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(ANS_CatchToAbilityInputCache)
 
@@ -25,7 +25,7 @@ void UANS_CatchToAbilityInputCache::NotifyBegin(USkeletalMeshComponent* MeshComp
     ASC = Cast<UUHLAbilitySystemComponent>(AbilitySystemInterface->GetAbilitySystemComponent());
     checkf(ASC, TEXT("ANS_CatchToAbilityInputCache can be used only on characters nested from UHL AbilitySystem"));
 
-    ASC->AddLooseGameplayTag(UHLGameplayTags::TAG_UHL_AbilityInputCache_Catching);
+    ASC->AddLooseGameplayTag(UHLGASGameplayTags::TAG_UHL_AbilityInputCache_Catching);
 }
 
 void UANS_CatchToAbilityInputCache::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference)
@@ -34,5 +34,5 @@ void UANS_CatchToAbilityInputCache::NotifyEnd(USkeletalMeshComponent* MeshComp, 
 
     if (!IsValid(ASC)) return;
 
-    ASC->RemoveLooseGameplayTagCompletly(UHLGameplayTags::TAG_UHL_AbilityInputCache_Catching);
+    ASC->RemoveLooseGameplayTagCompletly(UHLGASGameplayTags::TAG_UHL_AbilityInputCache_Catching);
 }

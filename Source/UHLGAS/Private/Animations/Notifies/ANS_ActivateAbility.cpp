@@ -8,7 +8,8 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
 #include "Components/SkeletalMeshComponent.h"
-#include "Utils/UnrealHelperLibraryBPL.h"
+#include "Engine/Engine.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(ANS_ActivateAbility)
 
@@ -21,11 +22,11 @@ void UANS_ActivateAbility::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSe
 {
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
 
-	if (!GameplayAbilityTag.IsValid())
-	{
-		UUnrealHelperLibraryBPL::DebugPrintString(MeshComp->GetWorld(), FString::Printf(TEXT("%s GameplayAbilityTag not set"), *this->GetName()));
-		return;
-	}
+    if (!GameplayAbilityTag.IsValid())
+    {
+    	UKismetSystemLibrary::PrintString(nullptr, FString::Printf(TEXT("%s GameplayAbilityTag not set"), *this->GetName()), false, true, FColor::Red, 2.0f);
+        return;
+    }
 	
 	ActorWithASC = Cast<IAbilitySystemInterface>(MeshComp->GetOwner());
 	if (ActorWithASC.IsValid())
@@ -38,11 +39,11 @@ void UANS_ActivateAbility::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequ
 {
 	Super::NotifyEnd(MeshComp, Animation, EventReference);
 
-	if (!GameplayAbilityTag.IsValid())
-	{
-		UUnrealHelperLibraryBPL::DebugPrintString(MeshComp->GetWorld(), FString::Printf(TEXT("%s GameplayAbilityTag not set"), *this->GetName()));
-		return;
-	}
+    if (!GameplayAbilityTag.IsValid())
+    {
+    	UKismetSystemLibrary::PrintString(nullptr, FString::Printf(TEXT("%s GameplayAbilityTag not set"), *this->GetName()), false, true, FColor::Red, 2.0f);
+        return;
+    }
 
 	CancelAbility();
 }

@@ -109,17 +109,8 @@ void UUHLDebugModuleSubsystem::OnCVarUHLAbilityInputCacheChanged()
 	IConsoleVariable* Var = IConsoleManager::Get().FindConsoleVariable(TEXT("uhl.Debug.AbilityInputCache"));
 	const bool bEnabled = Var ? Var->GetInt() != 0 : false;
 
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(
-			-1,
-			2.0f,
-			bEnabled ? FColor::Green : FColor::Silver,
-			FString::Printf(TEXT("[UHLDebug] AbilityInputCache %s"), bEnabled ? TEXT("ON") : TEXT("OFF"))
-		);
-	}
-
-	UE_LOG(LogTemp, Log, TEXT("[UHLDebug] AbilityInputCache %s"), bEnabled ? TEXT("ON") : TEXT("OFF"));
+	FString Message = FString::Printf(TEXT("[UHLDebug] AbilityInputCache %s"), bEnabled ? TEXT("ON") : TEXT("OFF"));
+	UKismetSystemLibrary::PrintString(nullptr, Message, false, true, bEnabled ? FColor::Green : FColor::Silver, 2.0f);
 
 	OnAbilityInputDebugCategoryChanged(bEnabled);
 }

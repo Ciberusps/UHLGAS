@@ -4,14 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "Animation/Notifies/AN_UHL_Base.h"
 #include "AN_FireGameplayEvent.generated.h"
 
 /**
  * 
  */
 UCLASS(Blueprintable, Category="UnrealHelperLibrary")
-class UHLGAS_API UAN_FireGameplayEvent : public UAN_UHL_Base
+class UHLGAS_API UAN_FireGameplayEvent : public UAnimNotify
 {
 	GENERATED_BODY()
 

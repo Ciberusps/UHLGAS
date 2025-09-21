@@ -30,7 +30,7 @@ public class UHLGAS : ModuleRules
 				"GameplayAbilities",
 				"GameplayTags",
 				"GameplayTasks",
-				"EnhancedInput", 
+				"EnhancedInput",
 				
 				"NiagaraAnimNotifies", 
 			}
@@ -44,9 +44,6 @@ public class UHLGAS : ModuleRules
 				"Engine",
 				
 				"DeveloperSettings",
-				
-				"UnrealHelperLibrary",
-				"UHLAI",
 			}
 			);
 

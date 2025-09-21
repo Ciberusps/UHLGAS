@@ -10,7 +10,7 @@
  * 
  */
 UCLASS(Blueprintable, meta=(ToolTip="Controls when GlobalTimeDilation can be changed by GlobalTimeDilation Curve"))
-class UHLGAS_API UANS_UHLGAS_GlobalTimeDilation : public UANS_UHL_Base
+class UHLGAS_API UANS_UHLGAS_GlobalTimeDilation : public UANS_UHLGAS_Base
 {
 	GENERATED_BODY()
 	

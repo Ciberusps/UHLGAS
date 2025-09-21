@@ -6,14 +6,14 @@
 #include "UObject/WeakInterfacePtr.h"
 #include "GameplayTagContainer.h"
 #include "AbilitySystemInterface.h"
-#include "Animation/Notifies/ANS_UHL_Base.h"
+#include "Animations/Notifies/ANS_UHLGAS_Base.h"
 #include "ANS_ActivateAbility.generated.h"
 
 /**
  *
  */
 UCLASS(Blueprintable, Category="UnrealHelperLibrary")
-class UHLGAS_API UANS_ActivateAbility : public UANS_UHL_Base
+class UHLGAS_API UANS_ActivateAbility : public UANS_UHLGAS_Base
 {
 	GENERATED_BODY()
 
