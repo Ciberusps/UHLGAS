@@ -32,18 +32,14 @@ void UUHLDebugModuleSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 		ECVF_Default);
 
 	// Install a console variable sink to listen to changes
-	ConsoleVariableSinkHandle = IConsoleManager::Get().RegisterConsoleVariableSink_Handle(FConsoleCommandDelegate::CreateUObject(
-		this,
-		&UUHLDebugModuleSubsystem::OnCVarUHLAbilityInputCacheChanged));
-
-	// Apply initial value
-	OnCVarUHLAbilityInputCacheChanged();
+	IConsoleVariable* CVarDebugCombat = IConsoleManager::Get().FindConsoleVariable(TEXT("uhl.Debug.AbilityInputCache"));
+	CVarDebugCombat->OnChangedDelegate().AddUObject(this, &UUHLDebugModuleSubsystem::OnCVarUHLAbilityInputCacheChanged);
+	OnCVarUHLAbilityInputCacheChanged(CVarDebugCombat);
 }
 
 void UUHLDebugModuleSubsystem::Deinitialize()
 {
     Super::Deinitialize();
-	IConsoleManager::Get().UnregisterConsoleVariableSink_Handle(ConsoleVariableSinkHandle);
 }
 
 void UUHLDebugModuleSubsystem::OnAbilityInputDebugCategoryChanged(bool bEnabled)
@@ -104,10 +100,9 @@ UUHLAbilitySystemComponent* UUHLDebugModuleSubsystem::GetPlayerAbilitySystemComp
     return UHLASC;
 }
 
-void UUHLDebugModuleSubsystem::OnCVarUHLAbilityInputCacheChanged()
+void UUHLDebugModuleSubsystem::OnCVarUHLAbilityInputCacheChanged(IConsoleVariable* Var)
 {
-	IConsoleVariable* Var = IConsoleManager::Get().FindConsoleVariable(TEXT("uhl.Debug.AbilityInputCache"));
-	const bool bEnabled = Var ? Var->GetInt() != 0 : false;
+	const bool bEnabled = Var->GetBool();
 
 	FString Message = FString::Printf(TEXT("[UHLDebug] AbilityInputCache %s"), bEnabled ? TEXT("ON") : TEXT("OFF"));
 	UKismetSystemLibrary::PrintString(nullptr, Message, false, true, bEnabled ? FColor::Green : FColor::Silver, 2.0f);

@@ -37,9 +37,6 @@ private:
 	UFUNCTION()
     void OnAbilityInputDebugCategoryChanged(bool bEnabled);
 
-	// CVar change sink
-	FConsoleVariableSinkHandle ConsoleVariableSinkHandle;
-
 	// Called when any console variable changes; reads the relevant CVar and toggles
-	void OnCVarUHLAbilityInputCacheChanged();
+	void OnCVarUHLAbilityInputCacheChanged(IConsoleVariable* Var);
 };
