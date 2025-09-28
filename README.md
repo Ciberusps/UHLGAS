@@ -1,4 +1,4 @@
-# UnrealHelperLibrary - GAS [UHLGAS]
+# 💪 UHLGAS
 
 **UHLGAS** - extended AbilitySystemComponent with ability to set initial abililties/effects/tagss, Lyra-like features - InputConfig, AbilitySets, extended GameplayAbility(more events, Cooldowns and Duration), blueprint library with helpful GAS functions like TryActivate/TryCancel AbilityWithTag and much more.
 Provides much smoother GAS experience mostly based on [Lyra](https://dev.epicgames.com/documentation/en-us/unreal-engine/lyra-sample-game-in-unreal-engine?application_version=5.5) features.
@@ -9,7 +9,7 @@ Part of [UnrealHelperLibrary](https://github.com/Ciberusps/unreal-helper-library
 
 Support: `UE5.6` at least(earlier not tested)
 
-![AiModule](https://github.com/user-attachments/assets/4becb592-c02e-423a-bf80-fcfc629ce518)
+**TODO: screenshot from FAB**
 
 ## ✨ Features
 
@@ -41,7 +41,9 @@ From source:
 ## 🧩 Components
 
 AbilitySystemComponent - TODO: screenshot
+
 AbilitySet - TODO: screenshot
+
 UHLGASBlueprintLibrary - TODO: screenshot
 
 ## 🚀 Setup
@@ -49,8 +51,6 @@ UHLGASBlueprintLibrary - TODO: screenshot
 TODO how to setup in project
 
 ## 📄 Documentation
-
-**[💪 GAS](#-gas-gameplay-ability-system)**
 
 Gameplay Ability System - Lyra based inputs, ability system component, ability system config, input cache, attribute set, ability sets
 
@@ -401,32 +401,6 @@ How to subscribe on debug category change in C++
 ###### `IsUHLDebugCategoryEnabled`
 
 Check is debug category enabled or not
-
-### Subsystems
-
-#### UHLHUD
-
-HUD with debugging abilities, for now used to display debug bars(e.g. HP/hidden attributes)
-
-### 🔃 LoadingUtilLibrary
-
-**UHLLoadingUtilLibrary** - loading utils from Lyra
-
-#### ApplyDefaultPriorityLoading
-
-#### ApplyStreamingPriorityLoading
-
-#### ApplyHighestPriorityLoading
-
-#### ApplyCustomPriorityLoading
-
-#### ForceGarbageCollection
-
-#### FlushLevelStreaming
-
-### 🎯 TraceUtilsBPL
-
-**UHLTraceUtilsBPL** - trace utils
 
 ### ⚙️ Settings
 
