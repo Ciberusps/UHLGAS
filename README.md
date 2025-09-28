@@ -1,94 +1,36 @@
-# Unreal Helper Library [UHL]
+# UnrealHelperLibrary - GAS [UHLGAS]
 
-**UHL** - unreal helper library, toolset to help developers working with AI, GAS, customizing editor and so on.
-Goal is to became a tool that insta-installed on new project creation.
-All tools are mostly tested on melee combat so if you have other background and think that something should
-work another way or have an idea on how to improve developer experience feel free to [discuss](https://github.com/Ciberusps/unreal-helper-library/discussions).
-
-**GAS things not required to be used at all, you can use library only for AI things**. GAS features provides
-much smoother GAS experience mostly based on [Lyra](https://dev.epicgames.com/documentation/en-us/unreal-engine/lyra-sample-game-in-unreal-engine?application_version=5.5) features.
+**UHLGAS** - extended AbilitySystemComponent with ability to set initial abililties/effects/tagss, Lyra-like features - InputConfig, AbilitySets, extended GameplayAbility(more events, Cooldowns and Duration), blueprint library with helpful GAS functions like TryActivate/TryCancel AbilityWithTag and much more.
+Provides much smoother GAS experience mostly based on [Lyra](https://dev.epicgames.com/documentation/en-us/unreal-engine/lyra-sample-game-in-unreal-engine?application_version=5.5) features.
 All GAS features designed in mind that they or their part can be added or dropped by you in development in any time
 and replaced by something custom that fits your project needs
 
-Support: `UE5.5 (main)`, `UE5.4 (branch UE5.4)`
+Part of [UnrealHelperLibrary](https://github.com/Ciberusps/unreal-helper-library).
+
+Support: `UE5.6` at least(earlier not tested)
 
 ![AiModule](https://github.com/user-attachments/assets/4becb592-c02e-423a-bf80-fcfc629ce518)
 
 ## ✨ Features
 
-- AI nodes
-  - `GameplayFocus` - set focus on actor
-  - `RandomChance` - randomize actions
-  - `InRange` - check distance to enemy
-  - `InAngle` - check angle to enemy
-  - `PlayAnimMontage` - play attack animation
-  - `SetBBValue` - set blackboard value
-  - `DebugPrintBBValue` - print blackboard value
-  - `DebugPrintString` - print string on screen
-  - `InvokeGameplayAbility` - activate/deactivate GAS Gameplay Ability by tag, with optional "wait for finishing"
-  - `TurnTo` - turn enemy using turn animations
 - GAS - Lyra based inputs, ability system component, ability system config, input cache, attribute set, ability sets
 - **GAS** strong Lyra based toolset for quick start with GAS and scalable for big projects
 - GAS abilities input binding using tags based on Lyra and enhanced with real project needs
-- GameplayTags based **DebugSystem**
-- Utils - utility functions for your game, e.g. `GetProjectVersion`, `GetAssetsOfClass`, `GetHighestPoint`
-- Editor - editor customization, e.g. `Custom thumnails`, `Custom class icon`
 
 ## 🚀 Install
 
-#### From source (recommended):
+### From source (recommended)
 
-- add git submodule to your plugins folder
-
-    ```bash
-    git submodule add https://github.com/Ciberusps/unreal-helper-library.git ./Plugins/UnrealHelperLibrary
-    ```
-
-- <details>
-  <summary>C++ setup, old engine versions</summary>
-
-  - to use C++ things add code to file `<ProjectName>.Build.cs`
-
-  ```C#
-      // <ProjectName>.Build.cs
-      public GameName(ReadOnlyTargetRules Target) : base(Target)
-      {
-          PublicDependencyModuleNames.AddRange(new string[] {
-              // add "UnrealHelperLibrary" to use it in C++
-              "UnrealHelperLibrary",
-          });
-
-          // OPTIONALLY add "UnrealHelperEditor" module to use custom unreal engine editor features
-          if (Target.bBuildEditor)
-          {
-              PrivateDependencyModuleNames.AddRange(new string[] { "UnrealHelperEditor" });
-          }
-      }
-  ```
-  
-  - to use specific engine version specify branch e.g. `-b UE5.4`
-
-    ```bash
-    git submodule add -b UE5.4 https://github.com/Ciberusps/unreal-helper-library.git ./Plugins/UnrealHelperLibrary
-    ```
-
-  - to use specific engine version specify branch e.g. `-b UE5.4`
-
-    ```bash
-    git submodule add -b UE5.4 https://github.com/Ciberusps/unreal-helper-library.git ./Plugins/UnrealHelperLibrary
-    ```
-
-  > [!NOTE]
-  > Don't forget to update your `README.md` with instructions on how to setup - `git submodule update --init --recursive` and how to update submodules/plugin(s) - `git submodule update --remote`
-
-  > [!NOTE]
-  > Add `Editor Preferences -> Force Compilation on Startup` in `Config/EditorPerProjectUserSettings.ini` your team don't want to recompile plugin manually 😉
+```bash
+// add git submodule to your plugins folder
+git submodule add https://github.com/Ciberusps/UHLGAS.git ./Plugins/UHLGAS
+```
 
 </details>
 
-#### From marketplace:
+### From marketplace
 
-https://www.fab.com/listings/9f7d82e9-bc72-42ff-b302-b3d6562bd4c8
+for now not listed
 
 ## ⬆️ Update
 
@@ -96,40 +38,17 @@ From source:
 
 - `git submodule update --remote` to update plugin from source
 
-## 🧩 Modules
+## 🧩 Components
 
-UHL consists of 3 modules:
+AbilitySystemComponent - TODO: screenshot
+AbilitySet - TODO: screenshot
+UHLGASBlueprintLibrary - TODO: screenshot
 
-- **UnrealHelperLibrary** - main module with GAS helper classes, AI behavior tree nodes, Blueprint Function Libraries. Most functionality can be tested in `Gyms`(maps for testing atomic/single gameplay mechanic), all `Gyms` located in `/Plugins/UnrealHelperLibrary/Content/Gyms`
-- **UnrealHelperEditor** - optional module with editor customization, e.g. custom thumnails, custom class icons
-- **UHL Utils (EditorUtilityWidget)** - widget with tools helping you make trivial things, like `ConvertToORM` quite often task when you want to combine 3 textures `Occlusion`, `Roughness`, `Metalic` in one ORM texture
+## 🚀 Setup
+
+TODO how to setup in project
 
 ## 📄 Documentation
-
-**[🧠 AI](#-ai)**
-
-AI nodes for behavior tree, based on `BehaviorTree` and `BehaviorTreeComponent` from `UE5.4` and `UE5.5` with some improvements and additional features
-
-> - Components
->   - [AIPerceptionComponent](#uhlaiperceptioncomponent)
-> - Composite
->   - [RandomSelector](#btc_randomselector)
-> - Services
->   - [GameplayFocus](#setgameplayfocus)
-> - Decorators
->   - [CheckGASGameplayTagsOnActor](#checkgasgameplaytagsonactor)
->   - [InAngle](#inangle)
->   - [InRange](#inrange)
->   - [LoopRandomCount](#looprandomcount)
->   - [RandomChance](#randomchance)
->   - [TimeLimitRandom](#timelimitrandom)
-> - Tasks
->   - [SetBBValue](#setbbvalue)
->   - [DebugPrintBBValue](#debugprintbbvalue)
->   - [DebugPrintString](#debugprintstring)
->   - [InvokeGameplayAbility](#invokegameplayability)
->   - [PlayAnimMontage](#playanimmontage)
->   - [TurnTo](#turnto)
 
 **[💪 GAS](#-gas-gameplay-ability-system)**
 
@@ -144,7 +63,7 @@ Gameplay Ability System - Lyra based inputs, ability system component, ability s
 >   - [AbilitySet](#abilityset)
 >   - [AbilitySystem Config](#abilitysystem-config)
 > - Tasks
->   - [InterpolateToPosition](#interpolatetoposition)
+>   - [TODO: move to UHL AsynkTask InterpolateToPosition](#interpolatetoposition)
 > - AbilityAsync tasks (AbilityAsync versions of GAS UAbilityTask's, AbilityAsync available in blueprints)
 >   - WaitForAbilityActivate
 >   - WaitForAbilityActivateWithTagRequirements
@@ -158,216 +77,9 @@ Gameplay Ability System - Lyra based inputs, ability system component, ability s
 >   - [FindTagByString](#findtagbystring)
 >   - [GetUHLAbilitySystemComponent](#getuhlabilitysystemcomponent)
 >   - [CreateGenericGASGameplayEffectSpec](#creategenericgasgameplayeffectspec)
-
-**[🦸 Character](#character)**
-
-Default character class with UHL interfaces implemented, so you don't need to do it by yourself
-
-> - [BaseCharacterWithASC](#basecharacterwithasc) (recommended for start)
-> - [BaseCharacter](#basecharacter)
-
-**[🪲 DebugSystem](#-debugsystem)**
-
-Debug system for your game, in mid-size commands you always use limited set of debugging tools
-
-> - Settings
->   - [DebugSystemSettings](#debugsystemsettings)
-> - Subsystem
->   - [UHLDebugSystemSubsystem](#uhldebugsystemsubsystem)
-> - AsyncActions
->   - [WaitDebugCategoryChange](#aa_waitdebugcategorychange)
-> - [DebugBlueprintLibrary](#debugblueprintlibrary)
->   - [IsUHLDebugCategoryEnabled](#isuhldebugcategoryenabled)
-
-**[📚 UnrealHelperLibrary](#unrealhelperlibrarybpl)**
-
-> - [UnrealHelperLibraryBPL](#unrealhelperlibrarybpl)
->   - Gameplay
->     - GetActorClosestToCenterOfScreen
->     - GetMostDistantActor
->    <!--  - CreateGenericGASGameplayEffectSpec -->
->   - RelativeAngles
->     - [RelativeAngleToActor](#relativeangletoactor)
->     - [GetPointAtRelativeAngle](#getpointatrelativeangle)
->     - [GetPointAtRelativeDirection](#getpointatrelativedirection)
->     - [GetPointAtAngleRelativeToOtherActor](#getpointatanglerelativetootheractor)
->     - [GetPointAtDirectionRelativeToOtherActor](#getpointatdirectionrelativetootheractor)
->     - [DirectionToAngle](#directiontoangle)
->   - UI/Screen
->     - GetViewportSizeUnscaled
->   - Misc
->     - [GetProjectVersion](#getprojectversion)
->     - [GetNamesOfComponentsOnObject](#getnamesofcomponentsonobject)
->     - [GetAssetsOfClass](#getassetsofclass)
->     - GetBuildType
->    <!--  - GetActorComponentByName -->
->    <!--  - GetSceneComponentByName -->
->   - Debug
->     - DrawDebugLineOnCanvas
->   - Other
->     - [GetHighestPoint](#gethighestpoint)
-> - [LoadingUtilLibrary](#loadingutillibrary)
->   - [ApplyDefaultPriorityLoading](#applydefaultpriorityloading)
->   - [ApplyStreamingPriorityLoading](#applystreamingpriorityloading)
->   - [ApplyHighestPriorityLoading](#applyhighestpriorityloading)
->   - [ApplyCustomPriorityLoading](#applycustompriorityloading)
->   - [ForceGarbageCollection](#forcegarbagecollection)
->   - [FlushLevelStreaming](#flushlevelstreaming)
-> - [TraceUtilsBPL](#traceutilsbpl)
->   - SweepCapsuleSingleByChannel
-> - [Settings](#settings)
->   - [UHL Settings](#uhl-settings)
-> - [Subsystems](#subsystems)
->   - [UHLHUD](#uhlhud)
-> - AnimNotifyState (ANS)
->   - [ANS_UHL_Base](#ans_uhl_base)
+> - AnimNotifies
+>   - [ANS_UHLGAS_Base](#ans_uhlgas_base)
 >   - [ANS_ActivateAbility](#ans_activateability)
-
-**[⌨ Editor](#-uhl-editor)**
-
-> - [Custom thumnails](#custom-thumnails)
-> - [Custom class icon](#custom-class-icon)
-> - [UHL Utils (Editor Utility Widget)](#uhl-utils-editor-utility-widget)
->   - [ConvertToORM](#converttoorm)
-
----
-
-### 🧠 AI
-
-UHL provides most needed AI nodes toolset for developing at least 3d-action AI - GameplayFocus, Random choices using RandomChance and RandomSelector, PlayAnimMontage to play attacks animations, InRange and InAngle to check distance to enemy and required angle
-![AI_nodes](https://github.com/user-attachments/assets/1a00afdf-ab36-4e1c-9bd1-1b29c46cd8ac)
-
-#### `UHLAIPerceptionComponent`
-
-⚒️ InProgress
-
-#### `BTC_RandomSelector`
-
-Select random child node using weights
-
-![image](https://github.com/Ciberusps/unreal-helper-library/assets/14001879/ad19828d-032f-4938-9106-2763ec6fb1fd)
-
-<details>
-  <summary>With cool validations</summary>
-
-#### Warns if summary of weights > 1
-
-![image](https://github.com/Ciberusps/unreal-helper-library/assets/14001879/78c62bb9-1b1e-4f5a-89b2-68ea4b445ec2)
-
-#### Warns if chances array have more items then child nodes
-
-![image](https://github.com/Ciberusps/unreal-helper-library/assets/14001879/8dc579a0-7f89-4f27-8a1b-a43fa9889496)
-
-#### Shows error if child nodes count > than chances count
-
-![image](https://github.com/Ciberusps/unreal-helper-library/assets/14001879/b8416859-a557-4378-85e3-27091f631b54)
-
-</details>
-
-#### `CheckGASGameplayTagsOnActor`
-
-**BTD_CheckGASGameplayTagsOnActor** - checks that actor has GAS gameplay tags specified.
-
-> [!WARNING]
-> Don't mess with `UBTDecorator_CheckGameplayTagsOnActor` - its only checks `GameplayTags` on actor itself not on `AbilitySystem`.
-
-Requirements:
-
-- actor should implement `IAbilitySystemInterface` to get `AbilitySystemComponent`
-
-![image](https://github.com/Ciberusps/unreal-helper-library/assets/14001879/f1581009-b9cd-408f-84de-2475b43012ae)
-
-#### `InAngle`
-
-**BTD_InAngle** - decorator to check is enemy in one of specified angle ranges. Useful in developing big enemies, for example we developing dragon we want to know is player under the right wing or leg, is player in front of dragon or behind and so on.
-
-![image](https://github.com/Ciberusps/unreal-helper-library/assets/14001879/20f95715-a013-4b5f-8107-cd72d3163f4a)
-
-#### `InRange`
-
-**BTD_InRange** - decorator to check distance between actors. Compliant with "MoveTo" node have same settings `bIncludeSelfCapsuleRadius` and `bIncludeTargetCapsuleRadius` to check distance excluding capsules radiuses
-
-![image](https://github.com/Ciberusps/unreal-helper-library/assets/14001879/5ee47572-0fdb-4afa-bbd1-d18eafb86807)
-![InRange](https://github.com/Ciberusps/unreal-helper-library/assets/14001879/e32b5d05-de82-4dfb-80d1-539c866008ff)
-
-#### `LoopRandomCount`
-
-**BTD_LoopRandomCount** - randomized version of decorator `Loop`
-
-![image](https://github.com/Ciberusps/unreal-helper-library/assets/14001879/9a97dd83-d5d3-4cfd-a9bb-830ce7f4c450)
-
-#### `TimeLimitRandom`
-
-**BTD_TimeLimitRandom** - randomized version of decorator `TimeLimit`
-
-![image](https://github.com/Ciberusps/unreal-helper-library/assets/14001879/4fd5b54f-5066-4b47-9425-fac0f92b1b07)
-
-#### `RandomChance`
-
-**BTD_RandomChance** - commonly used decorator to randomize actions. Fine for single child node, extra bad for multiple nodes due to chance regression, for randomization between multiple child nodes better to use [RandomSelector](#btc_randomselector)
-
-![image](https://github.com/Ciberusps/unreal-helper-library/assets/14001879/b469a200-5655-440a-a754-8f8f544a38a2)
-
-#### `SetGameplayFocus`
-
-**BTS_SetGameplayFocus** - alternative for "Set default focus". SetGameplayFocus made right way - prevents rotation jittering while enemy rotation.
-One of most common problems that anybody stucks when starting developing AI - "focus dont work"/"focus works wrong".
-
-![image](https://github.com/Ciberusps/unreal-helper-library/assets/14001879/c0add45c-76ef-44bc-b97c-0c56901e6e03)
-![GameplayFocus](https://github.com/Ciberusps/unreal-helper-library/assets/14001879/0126fc2b-8a20-4b61-93d8-b1ead6802057)
-
-Requirements:
-
-- turn on `UseControllerDesiredRotation`
-- turn off
-  - `bOrientRotationToMovement`
-  - `UseControllerRotationYaw`
-  - `UseControllerRotationPitch`
-  - `UseControllerRotationRoll`
-
-
-Troubleshooting:
-
-- check that nothing "ClearFocus"
-- check that MoveTo uses "AllowStafe"
-
-#### `SetBBValue`
-
-**BTT_SetBBValue** - helps settings values in blackboard, supports all blackboard types and for some values event provides opportunity to make calculations like `int`
-
-![image](https://github.com/Ciberusps/unreal-helper-library/assets/14001879/baf4ea25-5d19-482d-a60c-799663def759)
-
-#### `DebugPrintBBValue`
-
-**BTT_DebugPrintBBValue** - prints BB value of any type
-
-![image](https://github.com/Ciberusps/unreal-helper-library/assets/14001879/d138c011-fc9a-438e-bd39-658480cd95bf)
-
-#### `DebugPrintString`
-
-**BTT_DebugPrintString** - simple task for printing debug info on screen
-
-![image](https://github.com/Ciberusps/unreal-helper-library/assets/14001879/510e9766-37be-4f43-a60f-e0e012521841)
-
-#### `InvokeGameplayAbility`
-
-**BTT_InvokeGameplayAbility** - activate/deactivate GAS Gameplay Ability by tag, with optional "wait for finishing"
-
-![image](https://github.com/Ciberusps/unreal-helper-library/assets/14001879/1916c411-7068-43db-9e69-3e6190874de5)
-
-#### `PlayAnimMontage`
-
-**BTT_PlayAnimMontage** - play anim montage with option to customize PlayRate, Starting Position, Start Section Name and stopping montage on task abort
-
-![image](https://github.com/Ciberusps/unreal-helper-library/assets/14001879/5026ebdc-689d-4dba-a168-22ae8d6850bf)
-
-#### `TurnTo`
-
-**BTT_TurnTo** - turn to enemy using turn animations
-Drop in replacement for "RotateToFaceBBEntry" but with option to "RotateTo" with animations
-To get settings from actor requires `IUHLActorSettings` to be implemented on character
-
----
 
 ### 💪 GAS (Gameplay Ability System)
 
@@ -627,70 +339,9 @@ InputCache - to use it required to nest from GameplayAbility
 
 ---
 
-### 🦸 Character
+#### `ANS_UHLGAS_Base`
 
-Default characters classess with UHL interfaces implemented, so you don't need to do it by yourself
-
-#### `BaseCharacterWithASC`
-
-**UHLBaseCharacterWithASC** - recommended BaseCharacter for start - ASC created on start and
-inited on `PossessedBy`. Can be turned off by disabling `bInitUHLAbilitySystemOnPosses`
-
-#### `BaseCharacter`
-
-**UHLBaseCharacter** - simplest BaseCharacter with only UHL interfaces implemented, so you don't need to do it by yourself
-
----
-
-### UnrealHelperLibraryBPL
-
-#### > RelativeAngles
-
-#### `RelativeAngleToActor`
-
-for most cases you want to use "InRange" like `IsOtherActorInAngle` (or `IsOtherCharacterInRange` if you want to check distance)
-
-![image](https://github.com/Ciberusps/unreal-helper-library/assets/14001879/4a695df4-9583-451c-801b-98e63c8ad5c8)
-
-#### `GetPointAtRelativeAngle`
-
-![image](https://github.com/Ciberusps/unreal-helper-library/assets/14001879/4c2f5e47-9f5c-4e70-8d77-57cb7383290a)
-![image](https://github.com/Ciberusps/unreal-helper-library/assets/14001879/c0026be0-ce3a-4ee5-84e6-b8e90474fdb9)
-
-#### `GetPointAtRelativeDirection`
-
-![image](https://github.com/Ciberusps/unreal-helper-library/assets/14001879/c1ea6dda-4ccf-4441-a7d0-dc83ac977a9c)
-![image](https://github.com/Ciberusps/unreal-helper-library/assets/14001879/a33a93ad-f470-4dec-8c2c-6c76b275207f)
-
-#### `GetPointAtAngleRelativeToOtherActor`
-
-#### `GetPointAtDirectionRelativeToOtherActor`
-
-#### `DirectionToAngle`
-
-#### > Misc
-
-#### `GetProjectVersion`
-
-Get project version from "Project Settings"
-
-![image](https://github.com/Ciberusps/unreal-helper-library/assets/14001879/c15d4c68-48d2-4d49-bee6-438f18064f9f)
-
-![image](https://github.com/Ciberusps/unreal-helper-library/assets/14001879/d9e7e53c-b0ba-47cc-b63a-099423a89346)
-
-#### `GetNamesOfComponentsOnObject`
-
-Get names of actor components on object, usefull for [`GetOptions` UPROPERTY](https://benui.ca/unreal/uproperty/#getoptions)
-
-#### `GetAssetsOfClass`
-
-#### > Other
-
-#### `GetHighestPoint`
-
-#### `ANS_UHL_Base`
-
-**ANS_UHL_Base** - base `AnimNotifyState` class with commonly used features like
+**ANS_UHLGAS_Base** - base `AnimNotifyState` class with commonly used features like
 
 - subscribing `OnMontageBlendingOut` by overriding `OnMontageBlendingOut` can be disabled by `bUseOnMontageBlendingOut=false(true by default)`
 - more come later
@@ -779,77 +430,8 @@ HUD with debugging abilities, for now used to display debug bars(e.g. HP/hidden 
 
 ### ⚙️ Settings
 
-#### UHL Settings
-
 - You can set defaults for all [AbilitySystem](#abilitysystemcomponent) and [AbilitySystem Config](#abilitysystem-config) in your project its can be usefull
 if you don't want to copy paste your `AttributeSets`
-
-### ⌨ UHL Editor
-
-**UHL Editor** - optional module with editor customization, e.g. custom thumnails, custom class icons
-
-#### `Custom thumnails`
-
-![image](https://github.com/user-attachments/assets/c24fd8bb-0ffe-4666-afd5-8800df650c35)
-
-**Custom thumnails** - to override thumbnail by your own, just implement `IUHLEditorCustomThumbnail` interface and define your own icon using `GetCustomThumbnailIcon()`
-
-> [!WARNING]
-> ⚠️ NOT sure that blueprints supported for now
-
-```C++
-// UInventoryItem.h
-#if WITH_EDITOR
-#include "UHLEditorCustomThumbnail.h"
-#endif
-
-// IUHLEditorCustomThumbnail not available in production build
-#if !WITH_EDITOR
-class IUHLEditorCustomThumbnail {};
-#endif
-
-class GAMECODE_API UInventoryItem : public UObject,
-    public IUHLEditorCustomThumbnail
-{
-/** IUHLEditorCustomThumbnail **/
-#if WITH_EDITOR
-    virtual UTexture2D* GetCustomThumbnailIcon_Implementation() const override;
-#endif
-/** ~IUHLEditorCustomThumbnail **/
-}
-
-------------------------------------------------------------------
-
-// UInventoryItem.cpp
-#if WITH_EDITOR
-UTexture2D* UInventoryItem::GetCustomThumbnailIcon_Implementation()
-{
-    return Description.Icon;
-}
-#endif
-```
-
-Thanks to [this post](https://forums.unrealengine.com/t/custom-thumbnail-not-display-asset-is-never-loaded/143155/2?u=ciberus) and [this](https://forums.unrealengine.com/t/custom-thumbnail-on-blueprint/337532/3?u=ciberus)
-
-#### `Custom class icon`
-
-**Custom class icon** - to override classes icons on your own, just set settings in `Project Settings -> Editor -> UnrealHelperEditor Settings`
-
-![image](https://github.com/user-attachments/assets/da940018-2120-4b81-84da-5237e97e9c86)
-
-[List of default Unreal Engine Editor icons](https://github.com/EpicKiwi/unreal-engine-editor-icons)
-
-Thanks to [this post](https://www.quodsoler.com/blog/customize-your-unreal-class-icons) and [this](https://forums.unrealengine.com/t/how-to-load-a-font-uasset-and-use-it-for-fslatefontinfo/1548466/3?u=ciberus)
-
-### UHL Utils (Editor Utility Widget)
-
-⚒️ InProgress
-
-### ConvertToORM
-
-Combines separate `Occlusion`, `Roughness`, `Metalic` textures into one `ORM`
-
-TODO check ref - https://github.com/Atulin/ChannelMerger
 
 ## Special Thanks
 
