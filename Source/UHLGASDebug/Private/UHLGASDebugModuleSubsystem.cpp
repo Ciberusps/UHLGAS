@@ -17,7 +17,7 @@
 
 UUHLDebugModuleSubsystem::UUHLDebugModuleSubsystem()
 {
-    UHLDebugWidgetClass = FSoftObjectPath(TEXT("/UnrealHelperLibrary/UI/UI_UHL_DebugWidget.UI_UHL_DebugWidget_C"));
+    UHLDebugWidgetClass = FSoftObjectPath(TEXT("/UHLGAS/UI/UI_UHL_DebugWidget.UI_UHL_DebugWidget_C"));
 }
 
 void UUHLDebugModuleSubsystem::Initialize(FSubsystemCollectionBase& Collection)
@@ -69,6 +69,8 @@ UUHLDebugWidget* UUHLDebugModuleSubsystem::GetOrCreateUHLDebugWidget()
     if (!PlayerController) return nullptr;
 
     UClass* WidgetClass = UHLDebugWidgetClass.LoadSynchronous();
+	if (!WidgetClass) return nullptr;
+
     DebugWidgetInstance = CreateWidget<UUHLDebugWidget>(PlayerController, WidgetClass);
     DebugWidgetInstance->AddToViewport(99999999);
 
