@@ -5,6 +5,7 @@
 
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemGlobals.h"
+#include "UHLGASBlueprintLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(AN_UHLGAS_ActivateAbility)
@@ -33,6 +34,13 @@ void UAN_UHLGAS_ActivateAbility::Notify(USkeletalMeshComponent* MeshComp, UAnimS
 	UAbilitySystemComponent* ASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(OwnerActor);
 	if (ASC)
 	{
-		ASC->TryActivateAbilitiesByTag(FGameplayTagContainer(GameplayAbilityTag), bAllowRemoteActivation);
+		if (bActivate)
+		{
+			ASC->TryActivateAbilitiesByTag(FGameplayTagContainer(GameplayAbilityTag), bAllowRemoteActivation);
+		}
+		else
+		{
+			UUHLGASBlueprintLibrary::TryCancelAbilityWithTag(ASC, GameplayAbilityTag);
+		}
 	}
 }

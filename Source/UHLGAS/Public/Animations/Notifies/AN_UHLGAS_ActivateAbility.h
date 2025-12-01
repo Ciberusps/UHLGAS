@@ -19,6 +19,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="ActivateAbility")
 	FGameplayTag GameplayAbilityTag = FGameplayTag::EmptyTag;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="ActivateAbility")
+	bool bActivate = true;
+	
 	// by default don't allow remote execution, cause its requires time
 	// abilities in ANS's mostly don't have that time
 	// and not impacts gameplay, only enhances input and game feel
