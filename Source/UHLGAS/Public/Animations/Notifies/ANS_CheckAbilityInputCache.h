@@ -25,10 +25,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="CheckAbilityInputCache")
 	bool bCacheOnce = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="CheckAbilityInputCache")
+	UPROPERTY(BlueprintReadWrite, Category="CheckAbilityInputCache")
 	bool bUseCheckCacheOnlyWithThisTags = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="CheckAbilityInputCache", meta = (EditCondition = "bUseCheckCacheOnlyWithThisTags"))
+	UPROPERTY(BlueprintReadWrite, Category="CheckAbilityInputCache", meta = (EditCondition = "bUseCheckCacheOnlyWithThisTags"))
 	FGameplayTagContainer TargetTags = {};
 
 #if WITH_EDITOR
