@@ -47,7 +47,8 @@ void UUHLDebugModuleSubsystem::OnAbilityInputDebugCategoryChanged(bool bEnabled)
 	if (bEnabled)
 	{
 		UUHLAbilitySystemComponent* UHLASC = GetPlayerAbilitySystemComponent();
-
+		if (!UHLASC) return;
+		
 		UUHLDebugWidget* DebugWidget = GetOrCreateUHLDebugWidget();
 		if (!DebugWidget) return;
 		DebugWidget->ToggleAbilityInputCache(UHLASC);	
