@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ANS_UHLGAS_Base.h"
 #include "UHLAbilitySystemComponent.h"
 #include "Animation/AnimNotifies/AnimNotifyState.h"
 #include "ANS_CheckAbilityInputCache.generated.h"
@@ -12,7 +13,7 @@
  * by default clears AbilityInputCache on end
  */
 UCLASS(Category="UnrealHelperLibrary")
-class UHLGAS_API UANS_CheckAbilityInputCache final : public UAnimNotifyState
+class UHLGAS_API UANS_CheckAbilityInputCache final : public UANS_UHLGAS_Base
 {
 	GENERATED_BODY()
 	
@@ -42,6 +43,8 @@ public:
     virtual void NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration, const FAnimNotifyEventReference& EventReference) override;
     virtual void NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime, const FAnimNotifyEventReference& EventReference) override;
     virtual void NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference) override;
+	
+	virtual void OnMontageBlendingOut(UAnimMontage* Montage, bool bInterrupted) override;
 
 private:
     UPROPERTY()

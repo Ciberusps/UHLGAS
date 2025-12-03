@@ -16,12 +16,17 @@ void UANS_UHLGAS_Base::NotifyBegin(
 {
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
 
-	if (bUseOnMontageBlendingOut)
+	CurrentAnimMontage = EventReference.GetNotify()->GetLinkedMontage();
+	
+	if (CurrentAnimMontage.IsValid())
 	{
-		if (UAnimInstance* AnimInstance = MeshComp ? MeshComp->GetAnimInstance() : nullptr)
+		if (bUseOnMontageBlendingOut)
 		{
-			AnimInstance->OnMontageBlendingOut.AddDynamic(this, &ThisClass::OnMontageBlendingOut);
-		}
+			if (UAnimInstance* AnimInstance = MeshComp ? MeshComp->GetAnimInstance() : nullptr)
+			{
+				AnimInstance->OnMontageBlendingOut.AddDynamic(this, &ThisClass::_OnMontageBlendOut);
+			}
+		}	
 	}
 }
 
@@ -34,12 +39,22 @@ void UANS_UHLGAS_Base::NotifyEnd(
 
 	if (UAnimInstance* AnimInstance = MeshComp ? MeshComp->GetAnimInstance() : nullptr)
 	{
-		AnimInstance->OnMontageBlendingOut.RemoveDynamic(this, &ThisClass::OnMontageBlendingOut);
+		AnimInstance->OnMontageBlendingOut.RemoveDynamic(this, &ThisClass::_OnMontageBlendOut);
 	}
 }
 
 void UANS_UHLGAS_Base::OnMontageBlendingOut(UAnimMontage* Montage, bool bInterrupted)
 {
+}
+
+void UANS_UHLGAS_Base::_OnMontageBlendOut(UAnimMontage* Montage, bool bInterrupted)
+{
+	if (!Montage) return;
+	
+	if (Montage == CurrentAnimMontage)
+	{
+		OnMontageBlendingOut(Montage, bInterrupted);
+	}
 }
 
 
