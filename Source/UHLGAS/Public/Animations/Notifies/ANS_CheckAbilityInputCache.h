@@ -44,7 +44,7 @@ public:
     virtual void NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime, const FAnimNotifyEventReference& EventReference) override;
     virtual void NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference) override;
 	
-	virtual void OnMontageBlendingOut_Implementation(UAnimMontage* Montage, bool bInterrupted) override;
+	virtual void OnMontageBlendingOut_Implementation(UAnimMontage* Montage, bool bInterrupted) const override;
 
 private:
     UPROPERTY()

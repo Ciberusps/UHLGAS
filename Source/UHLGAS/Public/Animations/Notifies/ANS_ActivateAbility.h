@@ -79,12 +79,12 @@ protected:
 	virtual void NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration, const FAnimNotifyEventReference& EventReference) override;
 	virtual void NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference) override;
 
-	virtual void OnMontageBlendingOut_Implementation(UAnimMontage* Montage, bool bInterrupted) override;
+	virtual void OnMontageBlendingOut_Implementation(UAnimMontage* Montage, bool bInterrupted) const override;
 
 private:
 	// TODO check ANS's should be stateless!?
 	TWeakInterfacePtr<IAbilitySystemInterface> ActorWithASC;
 
 	UFUNCTION()
-	void CancelAbility();
+	void CancelAbility() const;
 };

@@ -44,7 +44,7 @@ void UANS_UHLGAS_Base::NotifyEnd(
 	}
 }
 
-void UANS_UHLGAS_Base::OnMontageBlendingOut_Implementation(UAnimMontage* Montage, bool bInterrupted)
+void UANS_UHLGAS_Base::OnMontageBlendingOut_Implementation(UAnimMontage* Montage, bool bInterrupted) const
 {
 }
 

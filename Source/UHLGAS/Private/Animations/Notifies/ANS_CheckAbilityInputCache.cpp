@@ -76,7 +76,7 @@ void UANS_CheckAbilityInputCache::NotifyEnd(USkeletalMeshComponent* MeshComp, UA
     }
 }
 
-void UANS_CheckAbilityInputCache::OnMontageBlendingOut_Implementation(UAnimMontage* Montage, bool bInterrupted)
+void UANS_CheckAbilityInputCache::OnMontageBlendingOut_Implementation(UAnimMontage* Montage, bool bInterrupted) const
 {
 	Super::OnMontageBlendingOut_Implementation(Montage, bInterrupted);
 	

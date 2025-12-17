@@ -18,7 +18,7 @@ void UANS_UHLGAS_GlobalTimeDilation::NotifyTick(USkeletalMeshComponent* MeshComp
 	UGameplayStatics::SetGlobalTimeDilation(MeshComp->GetOwner(), GlobalTimeDilationCurveValue);
 }
 
-void UANS_UHLGAS_GlobalTimeDilation::OnMontageBlendingOut_Implementation(UAnimMontage* Montage, bool bInterrupted)
+void UANS_UHLGAS_GlobalTimeDilation::OnMontageBlendingOut_Implementation(UAnimMontage* Montage, bool bInterrupted) const
 {
 	Super::OnMontageBlendingOut_Implementation(Montage, bInterrupted);
 

@@ -68,7 +68,7 @@ void UANS_ActivateAbility::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequ
 	CancelAbility();
 }
 
-void UANS_ActivateAbility::OnMontageBlendingOut_Implementation(UAnimMontage* Montage, bool bInterrupted)
+void UANS_ActivateAbility::OnMontageBlendingOut_Implementation(UAnimMontage* Montage, bool bInterrupted) const
 {
 	if (!bDeactivateOnMontageBlendingOut || !Montage)
 	{
@@ -81,7 +81,7 @@ void UANS_ActivateAbility::OnMontageBlendingOut_Implementation(UAnimMontage* Mon
 	}
 }
 
-void UANS_ActivateAbility::CancelAbility()
+void UANS_ActivateAbility::CancelAbility() const
 {
 	if (!ActorWithASC.IsValid()) return;
 	
