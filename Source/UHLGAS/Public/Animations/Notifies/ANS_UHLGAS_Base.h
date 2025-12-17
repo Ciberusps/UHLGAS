@@ -15,6 +15,7 @@ class UHLGAS_API UANS_UHLGAS_Base : public UAnimNotifyState
 	GENERATED_BODY()
 
 protected:
+	// TODO: add option bCallNotifyEndOnMontageBlendOut mostly we don't need to handle it ourselfs?
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="ANS_UHLGAS_Base")
 	bool bUseOnMontageBlendingOut = true;
 
@@ -29,12 +30,17 @@ protected:
 		UAnimSequenceBase* Animation,
 		const FAnimNotifyEventReference& EventReference) override;
 
-	UFUNCTION()
-	virtual void OnMontageBlendingOut(UAnimMontage* Montage, bool bInterrupted);
+	UFUNCTION(BlueprintCallable, Category="ANS_UHLGAS_Base")
+	AActor* GetOwnerActor() const { return OwnerActorInternal.Get(); };
+	
+	UFUNCTION(BlueprintNativeEvent, Category="ANS_UHLGAS_Base")
+	void OnMontageBlendingOut(UAnimMontage* Montage, bool bInterrupted);
+	virtual void OnMontageBlendingOut_Implementation(UAnimMontage* Montage, bool bInterrupted);
 	
 private:
 	TWeakObjectPtr<const UAnimMontage> CurrentAnimMontage;
+	TWeakObjectPtr<AActor> OwnerActorInternal;
 
 	UFUNCTION()
-	void _OnMontageBlendOut(UAnimMontage* Montage, bool bInterrupted);
+	void PrivateOnMontageBlendOut(UAnimMontage* Montage, bool bInterrupted);
 };

@@ -3,6 +3,7 @@
 
 #include "Animations/Notifies/ANS_ActivateAbility.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "Engine/World.h"
 #include "Animation/AnimMontage.h"
 #include "AbilitySystemComponent.h"
@@ -15,23 +16,42 @@
 
 FString UANS_ActivateAbility::GetNotifyName_Implementation() const
 {
-	return FString("ActivateAbility ") + GameplayAbilityTag.ToString();
+	return FString("ActivateAbility ") + AbilityTag.ToString();
 }
 
 void UANS_ActivateAbility::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration, const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
 
-    if (!GameplayAbilityTag.IsValid())
+    if (!AbilityTag.IsValid())
     {
-    	UKismetSystemLibrary::PrintString(nullptr, FString::Printf(TEXT("%s GameplayAbilityTag not set"), *this->GetName()), false, true, FColor::Red, 2.0f);
+    	UKismetSystemLibrary::PrintString(nullptr, FString::Printf(TEXT("%s AbilityTag not set"), *this->GetName()), false, true, FColor::Red, 2.0f);
         return;
     }
 	
-	ActorWithASC = Cast<IAbilitySystemInterface>(MeshComp->GetOwner());
+	AActor* OwnerActor = MeshComp->GetOwner();
+	if (!OwnerActor) return;
+		
+	ActorWithASC = Cast<IAbilitySystemInterface>(OwnerActor);
 	if (ActorWithASC.IsValid())
 	{
-		ActorWithASC->GetAbilitySystemComponent()->TryActivateAbilitiesByTag(FGameplayTagContainer(GameplayAbilityTag), bAllowRemoteActivation);
+		if (UAbilitySystemComponent* ASC = ActorWithASC->GetAbilitySystemComponent())
+		{
+			if (bActivateWithEvent)
+			{
+				FGameplayEventData EventDataToSend = {};
+				EventDataToSend.OptionalObject = EventData.bSendInstancedStructsInOptionalObject ? EventData.InstancedStructs : EventData.OptionalObject;
+				EventDataToSend.OptionalObject2 = EventData.OptionalObject2;
+				EventDataToSend.EventMagnitude = EventData.EventMagnitude;
+				EventDataToSend.TargetTags = EventData.TargetTags;
+				EventDataToSend.InstigatorTags = EventData.InstigatorTags;
+				UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OwnerActor, AbilityTag, EventDataToSend);	
+			}
+			else
+			{
+				ASC->TryActivateAbilitiesByTag(FGameplayTagContainer(AbilityTag), bAllowRemoteActivation);
+			}
+		}
 	}
 }
 
@@ -39,16 +59,16 @@ void UANS_ActivateAbility::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequ
 {
 	Super::NotifyEnd(MeshComp, Animation, EventReference);
 
-    if (!GameplayAbilityTag.IsValid())
+    if (!AbilityTag.IsValid())
     {
-    	UKismetSystemLibrary::PrintString(nullptr, FString::Printf(TEXT("%s GameplayAbilityTag not set"), *this->GetName()), false, true, FColor::Red, 2.0f);
+    	UKismetSystemLibrary::PrintString(nullptr, FString::Printf(TEXT("%s AbilityTag not set"), *this->GetName()), false, true, FColor::Red, 2.0f);
         return;
     }
 
 	CancelAbility();
 }
 
-void UANS_ActivateAbility::OnMontageBlendingOut(UAnimMontage* Montage, bool bInterrupted)
+void UANS_ActivateAbility::OnMontageBlendingOut_Implementation(UAnimMontage* Montage, bool bInterrupted)
 {
 	if (!bDeactivateOnMontageBlendingOut || !Montage)
 	{
@@ -63,9 +83,11 @@ void UANS_ActivateAbility::OnMontageBlendingOut(UAnimMontage* Montage, bool bInt
 
 void UANS_ActivateAbility::CancelAbility()
 {
-	if (ActorWithASC.IsValid())
+	if (!ActorWithASC.IsValid()) return;
+	
+	const FGameplayTagContainer Tags = FGameplayTagContainer(AbilityTag);
+	if (UAbilitySystemComponent* ASC = ActorWithASC->GetAbilitySystemComponent())
 	{
-		const FGameplayTagContainer Tags = FGameplayTagContainer(GameplayAbilityTag);
-		ActorWithASC->GetAbilitySystemComponent()->CancelAbilities(&Tags);
+		ASC->CancelAbilities(&Tags);
 	}
 }

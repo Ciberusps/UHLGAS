@@ -76,9 +76,9 @@ void UANS_CheckAbilityInputCache::NotifyEnd(USkeletalMeshComponent* MeshComp, UA
     }
 }
 
-void UANS_CheckAbilityInputCache::OnMontageBlendingOut(UAnimMontage* Montage, bool bInterrupted)
+void UANS_CheckAbilityInputCache::OnMontageBlendingOut_Implementation(UAnimMontage* Montage, bool bInterrupted)
 {
-	Super::OnMontageBlendingOut(Montage, bInterrupted);
+	Super::OnMontageBlendingOut_Implementation(Montage, bInterrupted);
 	
 	if (bClearCacheOnEnd && IsValid(ASC))
 	{

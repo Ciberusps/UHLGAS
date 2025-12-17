@@ -6,7 +6,7 @@
 #include "StructUtils/InstancedStruct.h"
 #include "PayloadWithInstancedStructs.generated.h"
 
-UCLASS(Blueprintable)
+UCLASS(Blueprintable, BlueprintType, DefaultToInstanced, EditInlineNew)
 class UPayloadWithInstancedStructs : public UObject
 {
 	GENERATED_BODY()
@@ -15,6 +15,6 @@ public:
 	UPayloadWithInstancedStructs() = default;
 	UPayloadWithInstancedStructs(TArray<FInstancedStruct> InstancedStructs_In);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(ExposeOnSpawn))
 	TArray<FInstancedStruct> InstancedStructs = {};
 };
