@@ -33,6 +33,8 @@ public class UHLGAS : ModuleRules
 				"EnhancedInput",
 				
 				"NiagaraAnimNotifies", 
+				
+				"NGAS", 
 			}
 			);
 

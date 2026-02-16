@@ -389,7 +389,7 @@ void UUHLAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGame
 			if (AbilitySpec->Ability && !AbilitySpec->IsActive())
 			{
 				const UUHLGameplayAbility* AbilityCDO = Cast<UUHLGameplayAbility>(AbilitySpec->Ability);
-				if (AbilityCDO->GetActivationPolicy() == EUHLAbilityActivationPolicy::WhileInputActive)
+				if (AbilityCDO->GetActivationPolicy() == ENGASAbilityActivationPolicy::WhileInputActive)
 				{
 					AbilitiesToActivate.AddUnique(AbilitySpec->Handle);
 				}
@@ -414,7 +414,7 @@ void UUHLAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGame
 					// If ability active, we should try to activate it again, instead of sending data
 					// so that's why if "OnInputTriggered" choosed - skip
 					&& AbilityCDO
-					&& AbilityCDO->GetActivationPolicy() != EUHLAbilityActivationPolicy::OnInputTriggered)
+					&& AbilityCDO->GetActivationPolicy() != ENGASAbilityActivationPolicy::OnInputTriggered)
 				{
                     // Ability is active so pass along the input event.
 					AbilitySpecInputPressed(*AbilitySpec);
@@ -422,7 +422,7 @@ void UUHLAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGame
 				else
 				{
 				    // const UUHLGameplayAbility* AbilityCDO = Cast<UUHLGameplayAbility>(AbilitySpec->Ability);
-                    if (AbilityCDO && AbilityCDO->GetActivationPolicy() == EUHLAbilityActivationPolicy::OnInputTriggered)
+                    if (AbilityCDO && AbilityCDO->GetActivationPolicy() == ENGASAbilityActivationPolicy::OnInputTriggered)
                     {
                         AbilitiesToActivate.AddUnique(AbilitySpec->Handle);
                     }

@@ -4,29 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
+#include "Abilities/NextGameplayAbility.h"
 #include "UHLGameplayAbility.generated.h"
 
 class UUHLAbilitySystemComponent;
-
-/**
- * EUHLAbilityActivationPolicy
- *
- *	Defines how an ability is meant to activate.
- */
-UENUM(BlueprintType)
-enum class EUHLAbilityActivationPolicy : uint8
-{
-    // Try to activate the ability when the input is triggered.
-    OnInputTriggered,
-	
-    // Continually try to activate the ability while the input is active.
-    // Subscribe on "WaitInputRelease" and "EndAbility" in blueprint,
-    // it's not possible to EndAbility from C++
-    WhileInputActive,
-
-    // Try to activate the ability when an avatar is assigned.
-    OnSpawn
-};
 
 // USTRUCT(BlueprintType)
 // struct FUHLWhileInputActiveSettings
@@ -45,16 +26,13 @@ enum class EUHLAbilityActivationPolicy : uint8
  *
  */
 UCLASS(Abstract, Category="UnrealHelperLibrary", Blueprintable, BlueprintType)
-class UHLGAS_API UUHLGameplayAbility : public UGameplayAbility
+class UHLGAS_API UUHLGameplayAbility : public UNextGameplayAbility
 {
 	GENERATED_BODY()
 
 public:
 	UUHLGameplayAbility(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
-    UFUNCTION(BlueprintCallable, Category = "UHL GameplayAbility")
-    EUHLAbilityActivationPolicy GetActivationPolicy() const { return ActivationPolicy; }
-
 	// UFUNCTION(BlueprintCallable)
 	// FUHLWhileInputActiveSettings GetWhileInputActiveSettings() const { return WhileInputActiveSettings; }
 	
@@ -89,14 +67,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category="UHL GameplayAbility")
 	bool GetIsCancelRequested() const { return bCancelRequested; };
 
-    UFUNCTION(BlueprintCallable, Category="UHL GameplayAbility")
-    UUHLAbilitySystemComponent* GetUHLAbilitySystemComponentFromActorInfo() const;
-
 	UFUNCTION(BlueprintCallable, Category="Ability", DisplayName = "CommitAbilityDuration")
 	bool K2_CommitAbilityDuration(bool BroadcastCommitEvent);
 	
-	void TryActivateAbilityOnSpawn(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) const;
-
 	// Commit Ability
 	virtual void CommitExecute(
 		const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
@@ -129,10 +102,6 @@ public:
 	void ReleaseCancellation();
 	
 protected:
-    // Defines how this ability is meant to activate.
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="UHL GameplayAbility")
-    EUHLAbilityActivationPolicy ActivationPolicy = EUHLAbilityActivationPolicy::OnInputTriggered;
-	
 	// UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(EditCondition="ActivationPolicy == EUHLAbilityActivationPolicy::WhileInputActive", EditConditionHides))
 	// FUHLWhileInputActiveSettings WhileInputActiveSettings;
 
@@ -172,21 +141,6 @@ protected:
 	 */
 	void CheckCancelReminder();
 #endif
-	
-
-	virtual void OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
-	virtual void OnRemoveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
-	virtual void OnPawnAvatarSet();
-
-	/** Called when this ability is granted to the ability system component. */
-	UFUNCTION(BlueprintImplementableEvent, Category="UHL GameplayAbility", DisplayName = "OnAbilityAdded")
-	void K2_OnAbilityAdded();
-	/** Called when this ability is removed from the ability system component. */
-	UFUNCTION(BlueprintImplementableEvent, Category="UHL GameplayAbility", DisplayName = "OnAbilityRemoved")
-	void K2_OnAbilityRemoved();
-	/** Called when the ability system is initialized with a pawn avatar. */
-	UFUNCTION(BlueprintImplementableEvent, Category="UHL GameplayAbility", DisplayName = "OnPawnAvatarSet")
-	void K2_OnPawnAvatarSet();
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category="Ability Duration")
