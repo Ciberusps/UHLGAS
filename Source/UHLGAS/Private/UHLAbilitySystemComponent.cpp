@@ -30,10 +30,13 @@ void UUHLAbilitySystemComponent::BeginPlay()
 UUHLAbilitySystemComponent::UUHLAbilitySystemComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	const UNextAbilitySystemSettings* NGASSettings = GetDefault<UNextAbilitySystemSettings>();
-	if (NGASSettings->bUseAbilitySystemConfigDefaultsInASC)
+	if (!HasAnyFlags(RF_ClassDefaultObject))
 	{
-		FillSettingsFromConfig(NGASSettings->AbilitySystemConfigDefaults);
+		const UNextAbilitySystemSettings* NGASSettings = GetDefault<UNextAbilitySystemSettings>();
+		if (NGASSettings->bUseAbilitySystemConfigDefaultsInASC)
+		{
+			FillSettingsFromConfig(NGASSettings->AbilitySystemConfigDefaults);
+		}
 	}
 }
 
@@ -141,7 +144,17 @@ void UUHLAbilitySystemComponent::FillSettingsFromConfig(const FNGASAbilitySystem
 	Abilities = AbilitySystemConfig_In.Abilities;
 
 	bGiveAttributesSetsOnStart = AbilitySystemConfig_In.bGiveAttributesSetsOnStart;
-	AttributeSets = AbilitySystemConfig_In.AttributeSets;
+	AttributeSets.Reset();
+	if (bGiveAttributesSetsOnStart)
+	{
+		for (const TSoftClassPtr<UAttributeSet>& AttributeSetClassPtr : AbilitySystemConfig_In.AttributeSets)
+		{
+			if (UClass* LoadedClass = AttributeSetClassPtr.LoadSynchronous())
+			{
+				AttributeSets.Add(LoadedClass);
+			}
+		}
+	}
 
 	bActivateAbilitiesOnStart = AbilitySystemConfig_In.bActivateAbilitiesOnStart;
 	ActiveAbilitiesOnStart = AbilitySystemConfig_In.ActiveAbilitiesOnStart;
