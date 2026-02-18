@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
 #include "GameplayTagContainer.h"
+#include "NextAbilitySystemConfig.h"
 #include "Engine/DataAsset.h"
 #include "UHLAbilitySystemConfig.generated.h"
 
@@ -12,6 +13,7 @@ class UGameplayAbility;
 class UUHLAbilitySet;
 class UUHLInputConfig;
 class UAttributeSet;
+class UNextAbilitySet;
 
 USTRUCT(BlueprintType)
 struct FUHLAbilitySystemSettings
@@ -69,17 +71,11 @@ public:
 	bool bUseInputCacheWindows = true;
 };
 
-/**
- * if you want to set default values like "AttributeSets" or something just nest from this
- */
 UCLASS(Blueprintable, BlueprintType)
-class UHLGAS_API UUHLAbilitySystemConfig : public UPrimaryDataAsset
+class UHLGAS_API UUHLAbilitySystemConfig : public UNextAbilitySystemConfig
 {
 	GENERATED_BODY()
 
 public:
 	UUHLAbilitySystemConfig();
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AbilitySystemConfig", meta=(ShowOnlyInnerProperties))
-	FUHLAbilitySystemSettings Settings;
 };

@@ -3,14 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystemComponent.h"
-#include "UHLAbilitySet.h"
-#include "UHLAbilitySystemConfig.h"
+#include "NextAbilitySystemComponent.h"
 #include "Input/AbilityInputCache.h"
 #include "UHLAbilitySystemComponent.generated.h"
 
-class UUHLAbilitySystemConfig;
-class UUHLAbilitySet;
 class UUHLInputConfig;
 class UUHLGameplayAbility;
 
@@ -18,27 +14,18 @@ class UUHLGameplayAbility;
  *
  */
 UCLASS(Category = "UnrealHelperLibrary", Blueprintable, meta=(BlueprintSpawnableComponent))
-class UHLGAS_API UUHLAbilitySystemComponent : public UAbilitySystemComponent
+class UHLGAS_API UUHLAbilitySystemComponent : public UNextAbilitySystemComponent
 {
 	GENERATED_BODY()
 
 public:
-	UUHLAbilitySystemComponent();
+	UUHLAbilitySystemComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
-	// "PropertyRedirects" don't or can't redirect properties to struct like "Settings"
-	// checked many ways nothing worked. Don't want to create "migration" so just fill
-	// properties from "AbilitySystemConfig"
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UHL AbilitySystemComponent", meta=(ShowOnlyInnerProperties))
-	// FUHLAbilitySystemSettings Settings = {};
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UHL AbilitySystemComponent", meta=(InlineEditConditionToggle))
-	bool bInitializeGameplayAttributes = true;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UHL AbilitySystemComponent", meta=(ForceInlineRow, EditCondition="bInitializeGameplayAttributes"))
-	TMap<FGameplayAttribute, float> InitialAttributes = {};
-
+	// DEPRECATED use AbilitySets only
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UHL AbilitySystemComponent", meta=(InlineEditConditionToggle))
 	bool bGiveAbilitiesOnStart = true;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="UHL AbilitySystemComponent", meta=(EditCondition="bGiveAbilitiesOnStart"))
+	// DEPRECATED use AbilitySets only
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, DisplayName="Abilities DEPRECATED", Category="UHL AbilitySystemComponent", meta=(EditCondition="bGiveAbilitiesOnStart"))
 	TArray<TSubclassOf<UGameplayAbility>> Abilities = {};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UHL AbilitySystemComponent", meta=(InlineEditConditionToggle))
@@ -47,26 +34,20 @@ public:
 	TArray<TSubclassOf<UAttributeSet>> AttributeSets = {};
 
 	// TODO replace by "EUHLAbilityActivationPolicy::OnSpawn"
+	// DEPRECATED - use abilities with AbilityActivationPolicy::OnSpawn
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UHL AbilitySystemComponent", meta=(InlineEditConditionToggle))
 	bool bActivateAbilitiesOnStart = true;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="UHL AbilitySystemComponent", meta=(EditCondition="bActivateAbilitiesOnStart"))
+	// DEPRECATED - use abilities with AbilityActivationPolicy::OnSpawn
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, DisplayName="ActiveAbilitiesOnStart DEPRECATED", Category="UHL AbilitySystemComponent", meta=(EditCondition="bActivateAbilitiesOnStart"))
 	TArray<FGameplayTagContainer> ActiveAbilitiesOnStart = {};
 
 	// TODO initial GameplayEffects?
+	// DEPRECATED use GameplayEffects for giving tags
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UHL AbilitySystemComponent", meta=(InlineEditConditionToggle))
 	bool bGiveInitialGameplayTags = true;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="UHL AbilitySystemComponent", meta=(EditCondition="bGiveInitialGameplayTags"))
+	// DEPRECATED use GameplayEffects for giving tags
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, DisplayName="InitialGameplayTags DEPRECATED", Category="UHL AbilitySystemComponent", meta=(EditCondition="bGiveInitialGameplayTags"))
 	FGameplayTagContainer InitialGameplayTags;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UHL AbilitySystemComponent",  meta=(InlineEditConditionToggle))
-	bool bGiveAbilitySetsOnStart = true;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="UHL AbilitySystemComponent", meta=(EditCondition="bGiveAbilitySetsOnStart"))
-	TArray<UUHLAbilitySet*> AbilitySets = {};
-
-	UPROPERTY(EditAnywhere, Transient, BlueprintReadWrite, Category="UHL AbilitySystemComponent", AdvancedDisplay, meta=(InlineEditConditionToggle))
-	bool bPreviewAllAbilities = true;
-	UPROPERTY(VisibleDefaultsOnly, Transient, AdvancedDisplay, Category="UHL AbilitySystemComponent", meta=(EditCondition="bPreviewAllAbilities", MultiLine=true))
-	TMap<FString, FString> DebugPreviewAbilitiesFromAbilitySets = {};
 
 	// binding inputs to tags check Readme.MD on how to setup it
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="InputConfig", meta=(EditCondition="!bUseAbilitySystemConfig"))
@@ -80,28 +61,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="InputConfig", meta=(EditCondition="bUseInputConfig && bUseAbilityInputCache"))
 	bool bUseInputCacheWindows = true;
 
-	// manage settings in config
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AbilitySystem Config")
-	bool bUseAbilitySystemConfig = false;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AbilitySystem Config", meta=(EditCondition="bUseAbilitySystemConfig"))
-	UUHLAbilitySystemConfig* AbilitySystemConfig;
-
-    UFUNCTION(BlueprintCallable, Category="UHL AbilitySystemComponent", meta=(DefaultToSelf="InAvatarActor"))
+	virtual void InitAbilitySystem(AActor* InAvatarActor) override;
     virtual void InitAbilitySystem(AActor* NewOwner, AActor* InAvatarActor, bool bActivateInitialAbilities = true);
-    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="UHL AbilitySystemComponent")
-	void InitAttributes();
-    virtual void InitAttributes_Implementation();
+
     UFUNCTION(BlueprintCallable, Category="UHL AbilitySystemComponent")
     virtual void GiveInitialTags();
     UFUNCTION(BlueprintCallable, Category="UHL AbilitySystemComponent")
-	virtual void SetAttributes(TMap<FGameplayAttribute, float> Attributes_In);
-    UFUNCTION(BlueprintCallable, Category="UHL AbilitySystemComponent")
 	virtual void ActivateInitialAbilities();
-
-	UFUNCTION(BlueprintCallable, Category="UHL AbilitySystemComponent")
-	virtual void GiveAbilitySet(const UUHLAbilitySet* AbilitySet);
-	UFUNCTION(BlueprintCallable, Category="UHL AbilitySystemComponent")
-	virtual void RemoveAbilitySetByTag(const FGameplayTag& GameplayTag);
 
 /** Input Config **/
     void ProcessAbilityInput(float DeltaTime, bool bGamePaused);
@@ -138,9 +104,6 @@ protected:
 
 #if WITH_EDITOR
 	virtual bool CanEditChange(const FProperty* InProperty) const override;
-	virtual void PostInitProperties() override;
-	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;
-	void UpdatePreviewAbilitiesMap();
 #endif
 
 private:
@@ -153,8 +116,6 @@ private:
 	TArray<FGameplayAbilitySpecHandle> InputReleasedSpecHandles;
 	// Handles to abilities that have their input held.
 	TArray<FGameplayAbilitySpecHandle> InputHeldSpecHandles;
-	// AbilitySets given to ASC
-	TArray<FUHLAbilitySet_GrantedHandles> AbilitySetGrantedHandles;
 
-	void FillSettingsFromConfig(const FUHLAbilitySystemSettings& AbilitySystemConfig_In);
+	virtual void FillSettingsFromConfig(const FNGASAbilitySystemSettings& AbilitySystemConfig_In) override;
 };
