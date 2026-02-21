@@ -252,7 +252,13 @@ void UUHLAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag Input
 			if (AbilitySpec.Ability && (AbilitySpec.Ability->GetAssetTags().HasTagExact(InputTag)))
 			{
 				InputPressedSpecHandles.AddUnique(AbilitySpec.Handle);
-				InputHeldSpecHandles.AddUnique(AbilitySpec.Handle);
+
+				// Hold list should contain only abilities that are really hold-driven.
+				const UUHLGameplayAbility* AbilityCDO = Cast<UUHLGameplayAbility>(AbilitySpec.Ability);
+				if (AbilityCDO && AbilityCDO->GetActivationPolicy() == ENGASAbilityActivationPolicy::WhileInputActive)
+				{
+					InputHeldSpecHandles.AddUnique(AbilitySpec.Handle);
+				}
 			}
 		}
 	}
