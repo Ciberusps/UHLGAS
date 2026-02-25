@@ -68,6 +68,8 @@ public:
     virtual void GiveInitialTags();
     UFUNCTION(BlueprintCallable, Category="UHL AbilitySystemComponent")
 	virtual void ActivateInitialAbilities();
+	
+	virtual void GiveAbilitySets(const TArray<UNextAbilitySet*> AbilitySets_In) override;
 
 /** Input Config **/
     void ProcessAbilityInput(float DeltaTime, bool bGamePaused);
@@ -116,6 +118,9 @@ private:
 	TArray<FGameplayAbilitySpecHandle> InputReleasedSpecHandles;
 	// Handles to abilities that have their input held.
 	TArray<FGameplayAbilitySpecHandle> InputHeldSpecHandles;
+	
+	UPROPERTY()
+	bool bGiveAbilitySetsOnStartMade = false;
 
 	virtual void FillSettingsFromConfig(const FNGASAbilitySystemSettings& AbilitySystemConfig_In) override;
 };

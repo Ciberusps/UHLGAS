@@ -65,15 +65,6 @@ void UUHLAbilitySystemComponent::InitAbilitySystem(AActor* NewOwner, AActor* InA
 	}
 
 	Super::InitAbilitySystem(InAvatarActor);
-	GiveInitialTags();
-	
-    if (bGiveAbilitiesOnStart)
-    {
-        for (auto& Ability : Abilities)
-        {
-            GiveAbility(FGameplayAbilitySpec(Ability));
-        }
-    }
 
     if (bActivateInitialAbilities)
     {
@@ -98,6 +89,24 @@ void UUHLAbilitySystemComponent::ActivateInitialAbilities()
             TryActivateAbilityWithTag(AbilityTags.First());
         }
     }
+}
+
+void UUHLAbilitySystemComponent::GiveAbilitySets(const TArray<UNextAbilitySet*> AbilitySets_In)
+{
+	GiveInitialTags();
+	
+	if (!bGiveAbilitySetsOnStartMade)
+	{
+		if (bGiveAbilitiesOnStart)
+		{
+			for (auto& Ability : Abilities)
+			{
+				GiveAbility(FGameplayAbilitySpec(Ability));
+			}
+		}
+	}
+	
+	Super::GiveAbilitySets(AbilitySets_In);
 }
 
 void UUHLAbilitySystemComponent::OnUnregister()
