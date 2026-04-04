@@ -31,7 +31,7 @@ public:
 	 * also to wait for activate/endability "WithTag" should be GameplayAbility "AbilityTags"(not strict tag check)
 	 * TODO: "PayloadInfo" not great solution probably better to check AN_FireGameplayEvent with its OptionalObject1/2
 	 */
-	UFUNCTION(BlueprintCallable, Category = "UnrealHelperLibrary|Ability|Tasks", meta = (DefaultToSelf = "TargetActor", BlueprintInternalUseOnly = "TRUE"))
+	UFUNCTION(BlueprintCallable, Category = "UnrealHelperLibrary|Ability|Tasks", meta = (DefaultToSelf = "TargetActor", BlueprintInternalUseOnly = "TRUE", AutoCreateRefTerm="PayloadInfo"))
 	static UAA_TryActivateAbilityAndWait* TryActivateAbilityAndWait(AActor* TargetActor, FGameplayTag WithTag,
 		bool bUsingEvent, const TArray<FInstancedStruct>& PayloadInfo, bool IncludeTriggeredAbilities=false, bool bAllowRemoteActivation=true, bool TriggerOnce=true);
 
