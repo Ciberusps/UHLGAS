@@ -3,38 +3,56 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Data/PayloadWithInstancedStructs.h"
 #include "GameplayTagContainer.h"
 #include "AN_FireGameplayEvent.generated.h"
 
 /**
  * 
  */
+
+USTRUCT(BlueprintType)
+struct FUHLGAS_AN_FireGameplayEvent_EventData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, Category="FireGameplayEvent")
+	FGameplayTag EventTag = FGameplayTag::EmptyTag;
+	
+	UPROPERTY(EditAnywhere, Category="FireGameplayEvent")
+	bool bSendInstancedStructsInOptionalObject = true;
+	
+	UPROPERTY(EditAnywhere, Category="FireGameplayEvent", Instanced, meta=(EditCondition="bSendInstancedStructsInOptionalObject"))
+	UPayloadWithInstancedStructs* InstancedStructs = nullptr;
+	
+	UPROPERTY(EditAnywhere, Category="FireGameplayEvent", Instanced, meta=(EditCondition="!bSendInstancedStructsInOptionalObject"))
+	UObject* OptionalObject = nullptr;
+	
+	UPROPERTY(EditAnywhere, Category="FireGameplayEvent", Instanced)
+	UObject* OptionalObject2 = nullptr;
+	
+	/** Tags that the instigator has */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FireGameplayEvent")
+	FGameplayTagContainer InstigatorTags;
+
+	/** Tags that the target has */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FireGameplayEvent")
+	FGameplayTagContainer TargetTags;
+
+	/** The magnitude of the triggering event */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FireGameplayEvent")
+	float EventMagnitude;
+};
+
 UCLASS(Blueprintable, Category="UnrealHelperLibrary")
 class UHLGAS_API UAN_FireGameplayEvent : public UAnimNotify
 {
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, Category="FireGameplayEvent")
-	FGameplayTag EventTag = FGameplayTag::EmptyTag;
-
-	// TODO use "UPayloadWithInstancedStructs" from "UAA_TryActivateAbilityAndWait"
-	UPROPERTY(EditAnywhere, Category="FireGameplayEvent", Instanced)
-	UObject* OptionalObject = nullptr;
-
-	UPROPERTY(EditAnywhere, Category="FireGameplayEvent", Instanced)
-	UObject* OptionalObject2 = nullptr;
-
-	// tags that required on instigator to fire event ??
-	UPROPERTY(EditAnywhere, Category="FireGameplayEvent")
-	FGameplayTagContainer InstigatorTags = {};
-
-	// tags that required on target to fire event ??
-	UPROPERTY(EditAnywhere, Category="FireGameplayEvent")
-	FGameplayTagContainer TargetTags = {};
 	
-	UPROPERTY(EditAnywhere, Category="FireGameplayEvent")
-	float EventMagnitude = 0.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="FireGameplayEvent", meta=(ForceInlineRow))
+	FUHLGAS_AN_FireGameplayEvent_EventData GameplayEventData = {};
 
 protected:
 #if WITH_EDITOR

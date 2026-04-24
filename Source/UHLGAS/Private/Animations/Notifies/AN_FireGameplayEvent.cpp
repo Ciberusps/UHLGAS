@@ -15,7 +15,7 @@ void UAN_FireGameplayEvent::PostEditChangeProperty(
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 
 	if (PropertyChangedEvent.Property != nullptr && 
-		PropertyChangedEvent.Property->GetFName() == GET_MEMBER_NAME_CHECKED(UAN_FireGameplayEvent, EventTag))
+		PropertyChangedEvent.Property->GetFName() == GET_MEMBER_NAME_CHECKED(UAN_FireGameplayEvent, GameplayEventData.EventTag))
 	{
 		if (UAnimSequenceBase* AnimSeq = Cast<UAnimSequenceBase>(GetOuter()))
 		{
@@ -27,7 +27,7 @@ void UAN_FireGameplayEvent::PostEditChangeProperty(
 
 FString UAN_FireGameplayEvent::GetNotifyName_Implementation() const
 {
-	return FString("FireGameplayEvent->") + EventTag.ToString();
+	return FString("FireGameplayEvent->") + GameplayEventData.EventTag.ToString();
 }
 
 void UAN_FireGameplayEvent::Notify(
@@ -43,13 +43,13 @@ void UAN_FireGameplayEvent::Notify(
 	
 	UAbilitySystemComponent* TargetASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(TargetActor);
 	
-	FGameplayEventData EventData;
+	FGameplayEventData EventData = {};
 	EventData.Target = TargetActor;
 	EventData.Instigator = TargetActor;
-	EventData.EventMagnitude = EventMagnitude;
-	EventData.OptionalObject = OptionalObject;
-	EventData.OptionalObject2 = OptionalObject2;
-	EventData.TargetTags = TargetTags;
-	EventData.InstigatorTags = InstigatorTags;
-	TargetASC->HandleGameplayEvent(EventTag, &EventData);
+	EventData.EventMagnitude = GameplayEventData.EventMagnitude;
+	EventData.OptionalObject = GameplayEventData.bSendInstancedStructsInOptionalObject ? GameplayEventData.InstancedStructs : GameplayEventData.OptionalObject;
+	EventData.OptionalObject2 = GameplayEventData.OptionalObject2;
+	EventData.TargetTags = GameplayEventData.TargetTags;
+	EventData.InstigatorTags = GameplayEventData.InstigatorTags;
+	TargetASC->HandleGameplayEvent(GameplayEventData.EventTag, &EventData); 
 }
