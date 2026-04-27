@@ -54,6 +54,33 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="FireGameplayEvent", meta=(ForceInlineRow))
 	FUHLGAS_AN_FireGameplayEvent_EventData GameplayEventData = {};
 
+private:
+	
+	UPROPERTY()
+	bool bMigratedSettingsToStruct = false;
+
+	//DEPRECATED
+
+	UPROPERTY(meta=(DeprecatedProperty))
+	FGameplayTag EventTag = FGameplayTag::EmptyTag;
+
+	UPROPERTY(meta=(DeprecatedProperty))
+	UObject* OptionalObject = nullptr;
+	
+	UPROPERTY(meta=(DeprecatedProperty))
+	UObject* OptionalObject2 = nullptr;
+	
+	UPROPERTY(meta=(DeprecatedProperty))
+	FGameplayTagContainer InstigatorTags;
+	
+	UPROPERTY(meta=(DeprecatedProperty))
+	FGameplayTagContainer TargetTags;
+	
+	UPROPERTY(meta=(DeprecatedProperty))
+	float EventMagnitude;
+
+	
+
 protected:
 #if WITH_EDITOR
 	/** Override this to prevent firing this notify state type in animation editors */
@@ -65,4 +92,5 @@ protected:
 	virtual FString GetNotifyName_Implementation() const override;
 
 	virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference) override;
+	virtual void PostLoad() override;
 };

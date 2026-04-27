@@ -53,3 +53,33 @@ void UAN_FireGameplayEvent::Notify(
 	EventData.InstigatorTags = GameplayEventData.InstigatorTags;
 	TargetASC->HandleGameplayEvent(GameplayEventData.EventTag, &EventData); 
 }
+
+void UAN_FireGameplayEvent::PostLoad()
+{
+	Super::PostLoad();
+	if (!bMigratedSettingsToStruct)
+	{
+		if (EventTag.IsValid())
+		{
+			GameplayEventData.EventTag = EventTag;
+		}
+		if (IsValid(OptionalObject))
+		{
+			GameplayEventData.OptionalObject = OptionalObject;
+		}
+		if (IsValid(OptionalObject2))
+		{
+			GameplayEventData.OptionalObject2 = OptionalObject2;
+		}
+		if (!InstigatorTags.IsEmpty())
+		{
+			GameplayEventData.InstigatorTags = InstigatorTags;
+		}
+		if (!TargetTags.IsEmpty())
+		{
+			GameplayEventData.TargetTags = TargetTags;
+		}
+		GameplayEventData.EventMagnitude = EventMagnitude;
+		bMigratedSettingsToStruct = true;
+	}
+}
