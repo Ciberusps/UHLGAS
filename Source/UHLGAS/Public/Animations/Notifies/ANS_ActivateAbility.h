@@ -38,7 +38,7 @@ struct FUHLGAS_ANS_ActivateAbility_EventData
 
 	/** The magnitude of the triggering event */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ActivateAbility")
-	float EventMagnitude;
+	float EventMagnitude = 0.f;
 };
 
 /**
