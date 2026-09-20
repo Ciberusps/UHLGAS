@@ -10,6 +10,7 @@
 #include "Core/UHLAbilitySystemInterface.h"
 #include "Engine/World.h"
 #include "Engine/GameInstance.h"
+#include "Misc/EngineVersionComparison.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(UHLGASBlueprintLibrary)
 
@@ -54,7 +55,11 @@ void UUHLGASBlueprintLibrary::UpdateStateGameplayTags(UAbilitySystemComponent* A
 		{
 			if (bShouldReplicate)
 			{
+#if UE_VERSION_OLDER_THAN(5, 8, 0)
 				ASC->AddReplicatedLooseGameplayTag(PositiveConditionTag);
+#else
+				ASC->AddLooseGameplayTag(PositiveConditionTag, 1, EGameplayTagReplicationState::TagOnly);
+#endif
 			}
 			else
 			{
@@ -65,7 +70,11 @@ void UUHLGASBlueprintLibrary::UpdateStateGameplayTags(UAbilitySystemComponent* A
 		{
 			if (bShouldReplicate)
 			{
+#if UE_VERSION_OLDER_THAN(5, 8, 0)
 				ASC->RemoveReplicatedLooseGameplayTag(PositiveConditionTag);
+#else
+				ASC->RemoveLooseGameplayTag(PositiveConditionTag, 1, EGameplayTagReplicationState::TagOnly);
+#endif
 			}
 			else
 			{
@@ -79,7 +88,11 @@ void UUHLGASBlueprintLibrary::UpdateStateGameplayTags(UAbilitySystemComponent* A
 		{
 			if (bShouldReplicate)
 			{
-				ASC->RemoveReplicatedLooseGameplayTag(PositiveConditionTag);	
+#if UE_VERSION_OLDER_THAN(5, 8, 0)
+				ASC->RemoveReplicatedLooseGameplayTag(PositiveConditionTag);
+#else
+				ASC->RemoveLooseGameplayTag(PositiveConditionTag, 1, EGameplayTagReplicationState::TagOnly);
+#endif	
 			}
 			else
 			{
@@ -92,7 +105,11 @@ void UUHLGASBlueprintLibrary::UpdateStateGameplayTags(UAbilitySystemComponent* A
 			{
 				if (bShouldReplicate)
 				{
+#if UE_VERSION_OLDER_THAN(5, 8, 0)
 					ASC->AddReplicatedLooseGameplayTag(NegativeConditionTag);
+#else
+					ASC->AddLooseGameplayTag(NegativeConditionTag, 1, EGameplayTagReplicationState::TagOnly);
+#endif
 				}
 				else
 				{
@@ -101,7 +118,11 @@ void UUHLGASBlueprintLibrary::UpdateStateGameplayTags(UAbilitySystemComponent* A
 			}
 			if (bShouldReplicate)
 			{
+#if UE_VERSION_OLDER_THAN(5, 8, 0)
 				ASC->RemoveReplicatedLooseGameplayTag(PositiveConditionTag);
+#else
+				ASC->RemoveLooseGameplayTag(PositiveConditionTag, 1, EGameplayTagReplicationState::TagOnly);
+#endif
 			}
 			else
 			{
