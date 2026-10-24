@@ -50,6 +50,9 @@ bool UAbilityInputCache::AddTagsToCache(TArray<FGameplayTag> AbilityTags_In, boo
 // should cancel all abilities that also cached but not fired
 void UAbilityInputCache::CheckCache()
 {
+    // cache disabled on ASC - nothing is ever added, skip silently (ANS_CheckAbilityInputCache calls this every tick)
+    if (!ASC.IsValid() || !ASC->bUseAbilityInputCache) return;
+
     UE_LOG(Log_UHL_AbilityInputCache, Log, TEXT("Check AbilityInputCache"));
 
     if (AbilityInputCache.IsEmpty())

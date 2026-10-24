@@ -31,7 +31,7 @@ void UANS_CheckAbilityInputCache::NotifyTick(USkeletalMeshComponent* MeshComp, U
 {
     Super::NotifyTick(MeshComp, Animation, FrameDeltaTime, EventReference);
 
-	if (!IsValid(ASC))
+	if (!IsValid(ASC) || !ASC->bUseAbilityInputCache)
 	{
 		return;
 	}
